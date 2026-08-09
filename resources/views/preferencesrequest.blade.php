@@ -155,7 +155,7 @@
                                     @endforeach
                                 @else
                                     <tr>
-                                        <td colspan="4" class="text-center text-muted">No preferences request found.</td>
+                                        <td colspan="4" class="text-center text-muted">No preferences request found!</td>
                                     </tr>
                                 @endif
                             </tbody>
