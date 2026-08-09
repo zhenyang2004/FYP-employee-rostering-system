@@ -143,11 +143,11 @@
                                             <td>{{ \Carbon\Carbon::parse($preferenceRequest->start_date)->format('d/m/Y') }}</td>
                                             <td>{{ \Carbon\Carbon::parse($preferenceRequest->end_date)->format('d/m/Y') }}</td>
                                             <td>
-                                                <a href="#" class="btn btn-primary btn-sm employee-action-btn" title="View">
+                                                <a href="{{ url('/viewpreferencesrequest', $preferenceRequest->id) }}" class="btn btn-primary btn-sm employee-action-btn" title="View">
                                                     <i class="fa fa-eye"></i>
                                                 </a>
 
-                                                <a href="#" class="btn btn-primary btn-sm employee-action-btn" title="Edit">
+                                                <a href="{{ url('/editpreferencesrequest', $preferenceRequest->id) }}" class="btn btn-primary btn-sm employee-action-btn" title="Edit">
                                                     <i class="fa fa-pencil"></i>
                                                 </a>
                                             </td>

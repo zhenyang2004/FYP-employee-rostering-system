@@ -74,3 +74,6 @@ Route::get('/generateroster', [GenerateRosterController::class, 'index'])->middl
 /*Preferences request route*/
 Route::get('/preferencesrequest', [PreferenceRequestController::class, 'index'])->middleware('auth')->name('preferencesrequest');
 Route::post('/preferencesrequest', [PreferenceRequestController::class, 'store'])->middleware('auth')->name('preferencesrequest.store');
+Route::get('/viewpreferencesrequest/{id}', [PreferenceRequestController::class, 'viewPreferences'])->middleware('auth')->name('viewpreferencesrequest');
+Route::get('/editpreferencesrequest/{id}', [PreferenceRequestController::class, 'editPreferences'])->middleware('auth')->name('editpreferencesrequest');
+Route::post('/editpreferencesrequest/{id}', [PreferenceRequestController::class, 'updatePreferences'])->middleware('auth')->name('editpreferencesrequest.update');
