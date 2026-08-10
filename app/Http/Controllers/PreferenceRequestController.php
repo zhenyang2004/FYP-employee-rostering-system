@@ -170,6 +170,10 @@ class PreferenceRequestController extends Controller
             $query->orderBy('preference_date', 'asc');
         }])->where('user_id', auth()->id())->findOrFail($id);
 
+        if (Carbon::parse($preferenceRequest->start_date)->lte(Carbon::today())) {
+            return redirect()->route('preferencesrequest')->withErrors(['preferences' => 'You can only edit preferences for future dates.']);
+        }
+
         return view('editpreferencesrequest', compact('breadcrumbs', 'preferenceRequest')); 
 
     }
@@ -177,6 +181,10 @@ class PreferenceRequestController extends Controller
     public function updatePreferences(Request $request, $id) {
 
         $preferenceRequest = PreferenceRequest::where('user_id', auth()->id())->findOrFail($id);
+
+        if (Carbon::parse($preferenceRequest->start_date)->lte(Carbon::today())) {
+            return redirect()->route('preferencesrequest')->withErrors(['preferences' => 'You can only edit preferences for future dates.']);
+        }
 
         $validated = $request->validate([
             'preferences' => 'required|array',

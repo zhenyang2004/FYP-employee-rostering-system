@@ -143,13 +143,23 @@
                                             <td>{{ \Carbon\Carbon::parse($preferenceRequest->start_date)->format('d/m/Y') }}</td>
                                             <td>{{ \Carbon\Carbon::parse($preferenceRequest->end_date)->format('d/m/Y') }}</td>
                                             <td>
+                                                 @php
+                                                    $canEdit = \Carbon\Carbon::parse($preferenceRequest->start_date)->gt(\Carbon\Carbon::today());
+                                                @endphp
+
                                                 <a href="{{ url('/viewpreferencesrequest', $preferenceRequest->id) }}" class="btn btn-primary btn-sm employee-action-btn" title="View">
                                                     <i class="fa fa-eye"></i>
                                                 </a>
 
-                                                <a href="{{ url('/editpreferencesrequest', $preferenceRequest->id) }}" class="btn btn-primary btn-sm employee-action-btn" title="Edit">
-                                                    <i class="fa fa-pencil"></i>
-                                                </a>
+                                                @if ($canEdit)
+                                                    <a href="{{ url('/editpreferencesrequest', $preferenceRequest->id) }}" class="btn btn-primary btn-sm employee-action-btn" title="Edit">
+                                                        <i class="fa fa-pencil"></i>
+                                                    </a>
+                                                @else
+                                                    <button type="button" class="btn btn-secondary btn-sm employee-action-btn" title="Edit is not allowed" disabled>
+                                                        <i class="fa fa-pencil"></i>
+                                                    </button>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

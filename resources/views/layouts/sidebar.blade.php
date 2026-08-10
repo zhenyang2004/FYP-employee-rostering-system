@@ -17,7 +17,7 @@
                 <li class="sidebar-item">
                     <a href="{{ url('/employeedetails') }}" class="{{ request()->is('employeedetails') ? 'active' : '' }}">
                         <i class="fa fa-id-card-o"></i>
-                            <span>Employees</span>
+                            <span>Employees Details</span>
                             <i class="bi bi-chevron-right ms-auto"></i>
                     </a>
                 </li>
