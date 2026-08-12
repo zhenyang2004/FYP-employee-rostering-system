@@ -39,7 +39,7 @@
                 </li>
 
                 <li class="sidebar-item"> 
-                    <a href="#">
+                    <a href="{{ url('leaverequest') }}" class="{{ request()->is('leaverequest') ? 'active' : '' }}">
                         <i class="fa fa-calendar-check-o"></i>
                             <span>Leave Requests</span>
                             <i class="bi bi-chevron-right ms-auto"></i>

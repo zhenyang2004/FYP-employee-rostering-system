@@ -777,3 +777,61 @@ body {
     font-size: 0.75rem;
     margin-right: 3px;
 }
+
+ .roster-calendar-table {
+        min-width: 1100px;
+        font-size: 0.88rem;
+    }
+
+    .roster-calendar-table th {
+        background-color: #f8fafc;
+        color: #0f172a;
+        font-weight: 700;
+        text-align: center;
+        vertical-align: middle;
+        border: 1px solid #dbe0e6;
+    }
+
+    .roster-calendar-table td {
+        vertical-align: top;
+        border: 1px solid #e5e7eb;
+        min-width: 135px;
+    }
+
+    .shift-column {
+        width: 150px;
+        min-width: 150px;
+    }
+
+    .shift-cell {
+        font-weight: 700;
+        color: #1e293b;
+        background-color: #f8fafc;
+        vertical-align: middle !important;
+    }
+
+    .shift-time {
+        display: block;
+        font-size: 0.75rem;
+        color: #64748b;
+        font-weight: 400;
+        margin-top: 4px;
+    }
+
+    .employee-chip {
+        display: block;
+        background-color: #eef2ff;
+        border: 1px solid #c7d2fe;
+        color: #1e293b;
+        padding: 6px 8px;
+        border-radius: 4px;
+        margin-bottom: 6px;
+        font-size: 0.8rem;
+    }
+
+    .preference-label {
+        display: block;
+        font-size: 0.72rem;
+        color: #64748b;
+        margin-top: 4px;
+    }

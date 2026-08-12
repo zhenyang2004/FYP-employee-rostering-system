@@ -10,7 +10,7 @@ use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\EmployeeListController;
 use App\Http\Controllers\GenerateRosterController;
 use App\Http\Controllers\PreferenceRequestController;
-
+use App\Http\Controllers\LeaveRequestController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -70,6 +70,9 @@ Route::post('/employee/{id}', [EmployeeListController::class, 'updateEmployeeRol
 
 /*Generate roster route*/
 Route::get('/generateroster', [GenerateRosterController::class, 'index'])->middleware('auth')->name('generateroster');
+Route::post('/generateroster/preview', [GenerateRosterController::class, 'preview'])->middleware('auth')->name('generateroster.preview');
+Route::post('/generateroster/save', [GenerateRosterController::class, 'save'])->middleware('auth')->name('generateroster.save');
+Route::post('/generateroster/reset', [GenerateRosterController::class, 'reset'])->middleware('auth')->name('generateroster.reset');
 
 /*Preferences request route*/
 Route::get('/preferencesrequest', [PreferenceRequestController::class, 'index'])->middleware('auth')->name('preferencesrequest');
@@ -77,3 +80,6 @@ Route::post('/preferencesrequest', [PreferenceRequestController::class, 'store']
 Route::get('/viewpreferencesrequest/{id}', [PreferenceRequestController::class, 'viewPreferences'])->middleware('auth')->name('viewpreferencesrequest');
 Route::get('/editpreferencesrequest/{id}', [PreferenceRequestController::class, 'editPreferences'])->middleware('auth')->name('editpreferencesrequest');
 Route::post('/editpreferencesrequest/{id}', [PreferenceRequestController::class, 'updatePreferences'])->middleware('auth')->name('editpreferencesrequest.update');
+
+/*Leave Request route*/
+Route::get('/leaverequest', [LeaveRequestController::class, 'index'])->middleware('auth')->name('leaverequest');
