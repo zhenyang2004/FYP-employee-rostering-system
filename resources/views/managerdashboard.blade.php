@@ -31,7 +31,7 @@
             </div>
 
         {{-- Dashboard content --}}
-            <p>Welcome back Manager! Here is your rostering overview.</p>
+            <p>Welcome back Manager ! Here is your rostering overview.</p>
         </div>
     </div>
 </div>

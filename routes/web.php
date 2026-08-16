@@ -11,6 +11,9 @@ use App\Http\Controllers\EmployeeListController;
 use App\Http\Controllers\GenerateRosterController;
 use App\Http\Controllers\PreferenceRequestController;
 use App\Http\Controllers\LeaveRequestController;
+use App\Http\Controllers\EmployeeDetailController;
+use App\Http\Controllers\SettingController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -39,7 +42,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 Route::post('/logout', [LoginController::class, 'logout'])->name('user.logout');
 
 /*Employee details route*/  
-Route::get('/employeedetails', function() {return view('employeedetails'); })->middleware('auth');
+Route::get('/employeedetails', [EmployeeDetailController::class, 'index'])->middleware('auth')->name('employeedetails');
 
 /*User profile route*/
 Route::get('/userprofile', [ProfileController::class, 'index'])->middleware('auth')->name('userprofile');
@@ -83,3 +86,12 @@ Route::post('/editpreferencesrequest/{id}', [PreferenceRequestController::class,
 
 /*Leave Request route*/
 Route::get('/leaverequest', [LeaveRequestController::class, 'index'])->middleware('auth')->name('leaverequest');
+Route::post('/leaverequest/store', [LeaveRequestController::class, 'storeLeaveRequest'])->middleware('auth')->name('leaverequest.store'); 
+
+
+/*Setting route*/
+Route::get('/setting', [SettingController::class, 'index'])->middleware('auth')->name('setting');
+Route::post('/setting', [SettingController::class, 'saveLeaveType'])->middleware('auth')->name('setting.leavetype.store');
+Route::post('/setting/{id}', [SettingController::class, 'destroyLeaveType'])->middleware('auth')->name('setting.leavetype.destroy');
+Route::get('editleavetype/{id}', [SettingController::class, 'editLeaveType'])->middleware('auth')->name('editleavetype');
+Route::post('/editleavetype/{id}', [SettingController::class, 'updateLeaveType'])->middleware('auth')->name('setting.leavetype.update');

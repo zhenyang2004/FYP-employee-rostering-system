@@ -56,7 +56,7 @@
 
 
                 <li class="sidebar-item">
-                    <a href="#">
+                    <a href="{{ url('setting') }}" class="{{ request()->is('setting') ? 'active' : '' }}">
                         <i class="fa fa-gear"></i>
                             <span>Settings</span>
                             <i class="bi bi-chevron-right ms-auto"></i>

@@ -779,59 +779,310 @@ body {
 }
 
  .roster-calendar-table {
-        min-width: 1100px;
-        font-size: 0.88rem;
+    min-width: 1100px;
+    font-size: 0.88rem;
     }
 
-    .roster-calendar-table th {
-        background-color: #f8fafc;
-        color: #0f172a;
-        font-weight: 700;
-        text-align: center;
-        vertical-align: middle;
-        border: 1px solid #dbe0e6;
+.roster-calendar-table th {
+    background-color: #f8fafc;
+    color: #0f172a;
+    font-weight: 700;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #dbe0e6;
+}
+
+.roster-calendar-table td {
+    vertical-align: top;
+    border: 1px solid #e5e7eb;
+    min-width: 135px;
+}
+
+.shift-column {
+    width: 150px;
+    min-width: 150px;
+}
+
+.shift-cell {
+    font-weight: 700;
+    color: #1e293b;
+    background-color: #f8fafc;
+    vertical-align: middle !important;
+}
+
+.shift-time {
+    display: block;
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 400;
+    margin-top: 4px;
+}
+
+.employee-chip {
+    display: block;
+    background-color: #eef2ff;
+    border: 1px solid #c7d2fe;
+    color: #1e293b;
+    padding: 6px 8px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+    font-size: 0.8rem;
+}
+
+.preference-label {
+    display: block;
+    font-size: 0.72rem;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+.leave-reason-row {
+    align-items: flex-start;
+}
+
+.leave-reason-row label {
+    padding-top: 8px;
+}
+
+.leave-reason-textarea {
+    min-height: 105px !important;
+    height: auto !important;
+    resize: vertical;
+    padding: 8px 10px;
+}
+
+.leave-attachment-row {
+    align-items: flex-start;
+}
+
+.leave-attachment-row label {
+    padding-top: 8px;
+}
+
+.leave-attachment-field {
+    flex: 1;
+}
+
+.leave-attachment-field .form-control {
+    height: 36px;
+}
+
+.leave-attachment-field small {
+    display: block;
+    margin-top: 6px;
+    color: #64748b;
+    font-size: 0.82rem;
+}
+
+.leave-request-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 14px 12px;
+    border-top: 1px solid #edf0f3;
+    background-color: #ffffff;
+}
+
+.leave-request-button-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 12px;
+    background-color: #ffffff;
+}
+
+.leave-request-button-actions .btn {
+    width: auto;
+    min-width: auto;
+    height: 34px;
+    padding: 6px 12px;
+    border-radius: 3px;
+    font-size: 0.82rem;
+    font-weight: 500;
+}
+
+.leave-request-button-actions .btn i {
+    margin-right: 4px;
+}
+
+#totalDays {
+    font-weight: 600;
+    color: #2563eb;
+}
+
+.settings-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 14px 12px;
+    background-color: #ffffff;
+}
+
+.settings-form-actions .btn {
+    width: auto;
+    min-width: auto;
+    height: 34px;
+    padding: 6px 12px;
+    border-radius: 3px;
+    font-size: 0.82rem;
+    font-weight: 500;
+}
+
+.settings-form-actions .btn i {
+    margin-right: 4px;
+}
+
+/* =========================
+   Settings Tabs
+========================= */
+
+.settings-tabs {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 10px 14px 0;
+    border-bottom: 1px solid #dfe3e8;
+    background-color: #ffffff;
+}
+
+.settings-tab {
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 10px 16px;
+    color: #64748b;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.settings-tab:hover {
+    color: #0d6efd;
+}
+
+.settings-tab.active {
+    color: #0d6efd;
+    border-bottom-color: #0d6efd;
+    font-weight: 600;
+}
+
+
+/* =========================
+   Tab Content
+========================= */
+
+.settings-tab-content {
+    display: none;
+}
+
+.settings-tab-content.active {
+    display: block;
+    padding: 14px;
+    background-color: #ffffff;
+}
+
+.settings-sub-panel {
+    margin-top: 0;
+    margin-bottom: 18px;
+}
+
+.settings-sub-panel:last-child {
+    margin-bottom: 0;
+}
+
+.settings-tab-content .profile-panel,
+.settings-tab-content .employee-list-panel {
+    margin-top: 0;
+}
+
+.settings-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 12px;
+    background-color: #ffffff;
+}
+
+.settings-form-actions .btn {
+    width: auto;
+    min-width: auto;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 0.82rem;
+}
+
+.settings-form-actions .btn i {
+    margin-right: 4px;
+}
+
+
+/* =========================
+   Buttons
+========================= */
+
+.settings-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 12px;
+    background-color: #ffffff;
+}
+
+.settings-form-actions .btn {
+    width: auto;
+    min-width: auto;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 0.82rem;
+}
+
+.settings-form-actions .btn i {
+    margin-right: 4px;
+}
+
+
+/* =========================
+   Empty future tabs
+========================= */
+
+.settings-empty-content {
+    min-height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    color: #64748b;
+}
+
+.settings-empty-content > i {
+    font-size: 2rem;
+    color: #94a3b8;
+}
+
+.settings-empty-content strong {
+    display: block;
+    color: #374151;
+    margin-bottom: 3px;
+}
+
+.settings-empty-content p {
+    margin: 0;
+    font-size: 0.88rem;
+}
+
+
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width: 768px) {
+    .settings-tabs {
+        overflow-x: auto;
     }
 
-    .roster-calendar-table td {
-        vertical-align: top;
-        border: 1px solid #e5e7eb;
-        min-width: 135px;
+    .settings-tab {
+        white-space: nowrap;
     }
-
-    .shift-column {
-        width: 150px;
-        min-width: 150px;
-    }
-
-    .shift-cell {
-        font-weight: 700;
-        color: #1e293b;
-        background-color: #f8fafc;
-        vertical-align: middle !important;
-    }
-
-    .shift-time {
-        display: block;
-        font-size: 0.75rem;
-        color: #64748b;
-        font-weight: 400;
-        margin-top: 4px;
-    }
-
-    .employee-chip {
-        display: block;
-        background-color: #eef2ff;
-        border: 1px solid #c7d2fe;
-        color: #1e293b;
-        padding: 6px 8px;
-        border-radius: 4px;
-        margin-bottom: 6px;
-        font-size: 0.8rem;
-    }
-
-    .preference-label {
-        display: block;
-        font-size: 0.72rem;
-        color: #64748b;
-        margin-top: 4px;
-    }
+}
