@@ -13,6 +13,7 @@ use App\Http\Controllers\PreferenceRequestController;
 use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\EmployeeDetailController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\ManageRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -95,3 +96,7 @@ Route::post('/setting', [SettingController::class, 'saveLeaveType'])->middleware
 Route::post('/setting/{id}', [SettingController::class, 'destroyLeaveType'])->middleware('auth')->name('setting.leavetype.destroy');
 Route::get('editleavetype/{id}', [SettingController::class, 'editLeaveType'])->middleware('auth')->name('editleavetype');
 Route::post('/editleavetype/{id}', [SettingController::class, 'updateLeaveType'])->middleware('auth')->name('setting.leavetype.update');
+
+/*Manage request route*/
+Route::get('/managerequest', [ManageRequestController::class, 'index'])->middleware('auth')->name('managerequest');
+Route::post('/managerequest/{id}', [ManageRequestController::class, 'updateLeaveRequest'])->middleware('auth')->name('managerequest.leave.status');

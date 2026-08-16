@@ -38,6 +38,14 @@
                     </a>
                 </li>
 
+                <li class="sidebar-item">
+                    <a href="#" class="{{ request()->is('rosterlist') ? 'active' : '' }}">
+                        <i class="fa fa-eye"></i>
+                            <span>View Roster</span>
+                            <i class="bi bi-chevron-right ms-auto"></i>
+                    </a>
+                </li>
+
                 <li class="sidebar-item"> 
                     <a href="{{ url('leaverequest') }}" class="{{ request()->is('leaverequest') ? 'active' : '' }}">
                         <i class="fa fa-calendar-check-o"></i>
@@ -49,11 +57,18 @@
                 <li class="sidebar-item">
                     <a href="{{ url('preferencesrequest') }}" class="{{ request()->is('preferencesrequest') ? 'active' : '' }}">
                         <i class="fa fa-sliders"></i>
-                        <span>Preferences Requests</span>
-                        <i class="bi bi-chevron-right ms-auto"></i>
+                            <span>Preferences Requests</span>
+                            <i class="bi bi-chevron-right ms-auto"></i>
                     </a>
                 </li>
 
+                <li class="sidebar-item">
+                    <a href="{{ url('managerequest') }}" class="{{ request()->is('managerequest') ? 'active' : '' }}">
+                        <i class="fa fa-tasks"></i>
+                            <span>Manage Requests</span>
+                            <i class="bi bi-chevron-right ms-auto"></i>
+                    </a>
+                </li>
 
                 <li class="sidebar-item">
                     <a href="{{ url('setting') }}" class="{{ request()->is('setting') ? 'active' : '' }}">

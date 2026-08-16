@@ -113,17 +113,20 @@
 
             {{-- Employee Preferences Table --}}
             <div class="employee-list-panel mt-3">
-
-                <div class="employee-list-panel-header">
+                <div class="employee-list-panel-header leave-history-toggle" id="leaveHistoryToggle">
                     <div class="employee-list-panel-title">
                         <div>
                             <i class="fa fa-history"></i>
                             <span>Preferences History</span>
                         </div>
                     </div>
+
+                    <div class="leave-history-toggle-icon">
+                        <i class="fa fa-chevron-down" id="leaveHistoryIcon"></i>
+                    </div>
                 </div>
 
-                <div class="employee-list-panel-body">
+                <div class="employee-list-panel-body d-none" id="leaveHistoryBody">
                     <div class="table-responsive">
                         <table class="table table-bordered employee-table">
                             <thead>
@@ -187,8 +190,12 @@
     const preferenceAlertMessage = document.getElementById('preferenceAlertMessage');
     const errorAlert = document.getElementById('errorAlert');
     const successAlert = document.getElementById('successAlert');
+    const leaveHistoryToggle = document.getElementById('leaveHistoryToggle');
+    const leaveHistoryBody = document.getElementById('leaveHistoryBody');
+    const leaveHistoryIcon = document.getElementById('leaveHistoryIcon');
     const today = new Date();
     const todayFormatted = formatDate(today);
+    
 
     startDateInput.addEventListener('change', function () {
         const startDateValue = this.value;
@@ -353,6 +360,11 @@
             successAlert.classList.add('d-none');
         }
     }
+
+    leaveHistoryToggle.addEventListener('click', function () {
+        leaveHistoryBody.classList.toggle('d-none');
+        leaveHistoryIcon.classList.toggle('rotate');
+    });
 
     setTimeout(function () {
         hideServerAlerts();

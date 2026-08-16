@@ -1086,3 +1086,79 @@ body {
         white-space: nowrap;
     }
 }
+
+.leave-history-toggle {
+    cursor: pointer;
+    user-select: none;
+}
+
+.leave-history-toggle-icon {
+    color: #64748b;
+    font-size: 0.85rem;
+}
+
+.leave-history-toggle-icon i {
+    transition: transform 0.2s ease;
+}
+
+.leave-history-toggle-icon i.rotate {
+    transform: rotate(180deg);
+}
+
+#leaveHistoryBody.d-none {
+    display: none !important;
+}
+
+.manage-request-action-form {
+    min-width: 190px;
+}
+
+.manage-request-remarks {
+    font-size: 0.82rem;
+    margin-bottom: 6px;
+    resize: vertical;
+}
+
+.manage-request-action-buttons {
+    display: flex;
+    gap: 6px;
+}
+
+.manage-request-action-buttons .btn {
+    width: auto;
+    min-width: auto;
+    height: 32px;
+    padding: 5px 8px;
+    font-size: 0.78rem;
+}
+
+.manage-request-action-buttons .btn i {
+    margin-right: 3px;
+}
+
+.manage-permission-message {
+    min-height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    color: #64748b;
+    text-align: left;
+}
+
+.manage-permission-message > i {
+    font-size: 2rem;
+    color: #dc3545;
+}
+
+.manage-permission-message h5 {
+    margin: 0 0 5px 0;
+    color: #374151;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.manage-permission-message p {
+    margin: 0;
+    font-size: 0.88rem;
+}

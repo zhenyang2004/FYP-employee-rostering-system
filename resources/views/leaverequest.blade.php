@@ -130,23 +130,74 @@
                 </div>
             </div>
             
-            <div class="employee-list-panel">
-                <div class="employee-list-panel-header">
+            <div class="employee-list-panel mt-3">
+                <div class="employee-list-panel-header leave-history-toggle" id="leaveHistoryToggle">
                     <div class="employee-list-panel-title">
                         <div><i class="fa fa-history"></i>
                             <span>Leave History</span>
                         </div>
                     </div>
+
+                    <div class="leave-history-toggle-icon">
+                        <i class="fa fa-chevron-down" id="leaveHistoryIcon"></i>
+                    </div>
                 </div>
 
-                <div class="employee-list-panel-body">
+                <div class="employee-list-panel-body d-none" id="leaveHistoryBody">
                     <div class="table-responsive">
                         <table class="table table-bordered employee-table">
                             <thead>
                                 <tr>
-                                    <td>No.</td>
+                                    <th>No.</th>
+                                    <th>Leave Type</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Total Days</th>
+                                    <th>Reason</th>
+                                    <th>Attachment</th>
+                                    <th>Status</th>
+                                    <th>Manager Remarks</th>
                                 </tr>
                             </thead>
+
+                            <tbody>
+                                @forelse ($leaveRequests as $index => $leaveRequest)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $leaveRequest->leaveType->name ?? '-' }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($leaveRequest->start_date)->format('d/m/Y') }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($leaveRequest->end_date)->format('d/m/Y') }}</td>
+                                        <td>{{ $leaveRequest->total_days }}</td>
+                                        <td>{{ $leaveRequest->reason ?? '-' }}</td>
+                                        <td>
+                                            @if ($leaveRequest->attachment)
+                                                <a href="{{ asset('storage/' . $leaveRequest->attachment) }}" target="_blank" class="btn btn-info btn-sm">
+                                                    <i class="fa fa-eye"></i>
+                                                    View
+                                                </a>
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($leaveRequest->status == 'Pending')
+                                                <span class="badge bg-warning text-dark">Pending</span>
+                                            @elseif ($leaveRequest->status == 'Approved')
+                                                <span class="badge bg-success">Approved</span>
+                                            @elseif ($leaveRequest->status == 'Rejected')
+                                                <span class="badge bg-danger">Rejected</span>
+                                            @else
+                                                <span class="badge bg-secondary">{{ $leaveRequest->status }}</span>
+                                            @endif
+                                        </td>
+                                        <td>{{ $leaveRequest->manager_remark ?? '-' }}</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="9" class="text-center text-muted">No leave requests found.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -161,11 +212,13 @@
     const endDateInput = document.getElementById('endDate');
     const totalDaysInput = document.getElementById('totalDays');
     const resetLeaveBtn = document.getElementById('resetLeaveBtn');
-
     const leaveAlert = document.getElementById('leaveAlert');
     const leaveAlertMessage = document.getElementById('leaveAlertMessage');
     const errorAlert = document.getElementById('errorAlert');
     const successAlert = document.getElementById('successAlert');
+    const leaveHistoryToggle = document.getElementById('leaveHistoryToggle');
+    const leaveHistoryBody = document.getElementById('leaveHistoryBody');
+    const leaveHistoryIcon = document.getElementById('leaveHistoryIcon');
 
     const today = new Date();
     const todayFormatted = formatDate(today);
@@ -181,16 +234,6 @@
         
         if (!startDateValue || !endDateValue) {
             totalDaysInput.value = '';
-            return;
-        }
-
-        if (startDateValue < todayFormatted) {
-            showLeaveAlert('Start date cannot be earlier than today.');
-
-            startDateInput.value = '';
-            endDateInput.value = '';
-            totalDaysInput.value = '';
-
             return;
         }
 
@@ -250,6 +293,11 @@
             successAlert.classList.add('d-none');
         }
     }
+
+    leaveHistoryToggle.addEventListener('click', function () {
+        leaveHistoryBody.classList.toggle('d-none');
+        leaveHistoryIcon.classList.toggle('rotate');
+    });
 
     setTimeout(function () {
         hideServerAlerts();

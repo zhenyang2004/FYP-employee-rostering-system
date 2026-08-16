@@ -25,7 +25,7 @@ class LeaveRequestController extends Controller
 
         $leaveTypes = LeaveType::where('status', 'Enabled')->orderBy('name', 'asc')->get();
 
-        $leaveRequests = LeaveRequest::with('leaveType')->where('user_id', auth()->id())->orderBy('created_at', 'desc')->get();
+        $leaveRequests = LeaveRequest::with('leaveType')->where('user_id', auth()->id())->orderBy('created_at', 'asc')->get();
 
         return view('leaverequest', compact('breadcrumbs', 'leaveTypes', 'leaveRequests'));
     }
