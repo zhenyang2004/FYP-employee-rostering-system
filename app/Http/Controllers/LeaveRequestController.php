@@ -40,10 +40,24 @@ class LeaveRequestController extends Controller
             'attachment' => 'nullable|file|mimes:pdf,doc,docx,jpg,png,jpeg|max:2048',
         ]);
 
+        $leaveType = LeaveType::findOrFail($validated['leave_type_id']);
+
         $startDate = Carbon::parse($validated['start_date']);
         $endDate = Carbon::parse($validated['end_date']);
 
         $totalDays = $startDate->diffInDays($endDate) + 1;
+        $currentYear = $startDate->year;
+
+        if ($leaveType->entitlement_days > 0) {
+
+            $usedDays = LeaveRequest::where('user_id', auth()->id())->where('leave_type_id', $leaveType->id)->where('status', 'Approved')->whereYear('start_date', $currentYear)->sum('total_days');
+            $pendingDays = LeaveRequest::where('user_id', auth()->id())->where('leave_type_id', $leaveType->id)->where('status', 'Pending')->whereYear('start_date', $currentYear)->sum('total_days');
+            $availableDays = $leaveType->entitlement_days - $usedDays - $pendingDays;
+
+            if ($totalDays > $availableDays) {
+                return back()->withInput()->withErrors(['leave_balance' => 'You have ' . $availableDays . ' days available for ' . $leaveType->name . '.']);
+            }
+        }
 
         $attachmentPath = null;
         if ($request->hasFile('attachment')) {

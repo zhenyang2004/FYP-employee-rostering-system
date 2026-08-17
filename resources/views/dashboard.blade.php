@@ -30,8 +30,66 @@
                 </nav>
             </div>
 
-        {{-- Dashboard content --}}
-            <p>Welcome back! Here is your rostering overview.</p>
+            {{-- Leave Balance Summary --}}
+            <div class="employee-list-panel mb-3">
+                <div class="employee-list-panel-header">
+                    <div class="employee-list-panel-title">
+                        <div>
+                            <i class="fa fa-calendar-check-o"></i>
+                            <span>Leave Balance Summary</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="employee-list-panel-body">
+                    <div class="leave-summary-container">
+
+                        @forelse ($leaveSummaries as $leaveSummary)
+                            <div class="leave-summary-card">
+
+                                <div class="leave-summary-title">
+                                    {{ $leaveSummary['name'] }}
+                                </div>
+
+                                <div class="leave-summary-main">
+                                    @if ($leaveSummary['is_unlimited'])
+                                        N/A
+                                        <span>no limit</span>
+                                    @else
+                                        {{ $leaveSummary['remaining_days'] }}
+                                        <span>days left</span>
+                                    @endif
+                                </div>
+
+                                <div class="leave-summary-details">
+                                    <div>
+                                        <span>Entitlement</span>
+                                        <strong>
+                                            @if ($leaveSummary['is_unlimited'])
+                                                N/A
+                                            @else
+                                                {{ $leaveSummary['entitlement_days'] }}
+                                            @endif
+                                        </strong>
+                                    </div>
+                                    <div>
+                                        <span>Used</span>
+                                        <strong>{{ $leaveSummary['used_days'] }}</strong>
+                                    </div>
+                                    <div>
+                                        <span>Pending</span>
+                                        <strong>{{ $leaveSummary['pending_days'] }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="text-muted">
+                                No leave type records found.
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

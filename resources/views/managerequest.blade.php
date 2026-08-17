@@ -46,7 +46,7 @@
                         <div class="manage-permission-message">
                             <i class="fa fa-exclamation-circle"></i>
                             <div>
-                                <h5>You do not have permission to access this page.</h5>
+                                <h5>You do not have permission to access this page!</h5>
                                 <p>Only managers are allowed to manage leave requests.</p>
                             </div>
                         </div>

@@ -14,6 +14,7 @@ use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\EmployeeDetailController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ManageRequestController;
+use App\Http\Controllers\ViewRosterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -100,3 +101,6 @@ Route::post('/editleavetype/{id}', [SettingController::class, 'updateLeaveType']
 /*Manage request route*/
 Route::get('/managerequest', [ManageRequestController::class, 'index'])->middleware('auth')->name('managerequest');
 Route::post('/managerequest/{id}', [ManageRequestController::class, 'updateLeaveRequest'])->middleware('auth')->name('managerequest.leave.status');
+
+/*View roster route*/
+Route::get('/viewroster', [ViewRosterController::class, 'index'])->middleware('auth')->name('viewroster');

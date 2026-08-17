@@ -1162,3 +1162,64 @@ body {
     margin: 0;
     font-size: 0.88rem;
 }
+
+/* =========================
+   Dashboard Leave Balance 
+========================= */
+.leave-summary-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    padding: 14px;
+}
+
+.leave-summary-card {
+    border: 1px solid #dfe3e8;
+    border-radius: 4px;
+    background-color: #ffffff;
+    padding: 14px;
+}
+
+.leave-summary-title {
+    color: #374151;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.leave-summary-main {
+    color: #0d6efd;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.leave-summary-main span {
+    color: #64748b;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.leave-summary-details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid #edf0f3;
+    padding-top: 10px;
+    gap: 8px;
+}
+
+.leave-summary-details div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.leave-summary-details span {
+    color: #64748b;
+    font-size: 0.78rem;
+}
+
+.leave-summary-details strong {
+    color: #374151;
+    font-size: 0.9rem;
+}

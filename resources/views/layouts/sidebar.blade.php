@@ -39,7 +39,7 @@
                 </li>
 
                 <li class="sidebar-item">
-                    <a href="#" class="{{ request()->is('rosterlist') ? 'active' : '' }}">
+                    <a href="{{ url('/viewroster') }}" class="{{ request()->is('rosterlist') ? 'active' : '' }}">
                         <i class="fa fa-eye"></i>
                             <span>View Roster</span>
                             <i class="bi bi-chevron-right ms-auto"></i>
