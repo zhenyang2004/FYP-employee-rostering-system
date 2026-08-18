@@ -1223,3 +1223,81 @@ body {
     color: #374151;
     font-size: 0.9rem;
 }
+
+.leave-summary-card.leave-safe {
+    border-left: 4px solid #22c55e;
+}
+
+.leave-summary-card.leave-safe .leave-summary-main {
+    color: #16a34a;
+}
+
+
+/* Warning - 26% to 50% remaining */
+.leave-summary-card.leave-warning {
+    border-left: 4px solid #f59e0b;
+}
+
+.leave-summary-card.leave-warning .leave-summary-main {
+    color: #d97706;
+}
+
+
+/* Danger - 25% or less remaining */
+.leave-summary-card.leave-danger {
+    border-left: 4px solid #ef4444;
+}
+
+.leave-summary-card.leave-danger .leave-summary-main {
+    color: #dc2626;
+}
+
+
+/* Unlimited Leave */
+.leave-summary-card.leave-unlimited {
+    border-left: 4px solid #64748b;
+}
+
+.leave-summary-card.leave-unlimited .leave-summary-main {
+    color: #64748b;
+}
+
+
+/* Status Badge */
+.leave-summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.leave-summary-header .leave-summary-title {
+    margin-bottom: 0;
+}
+
+.leave-status {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 20px;
+}
+
+.leave-safe .leave-status {
+    background-color: #dcfce7;
+    color: #15803d;
+}
+
+.leave-warning .leave-status {
+    background-color: #fef3c7;
+    color: #b45309;
+}
+
+.leave-danger .leave-status {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+.leave-unlimited .leave-status {
+    background-color: #f1f5f9;
+    color: #475569;
+}

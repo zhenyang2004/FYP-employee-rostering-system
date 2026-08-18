@@ -45,10 +45,50 @@
                     <div class="leave-summary-container">
 
                         @forelse ($leaveSummaries as $leaveSummary)
-                            <div class="leave-summary-card">
 
-                                <div class="leave-summary-title">
-                                    {{ $leaveSummary['name'] }}
+                            @php
+                                $statusClass = 'leave-safe';
+                                $statusText = 'Available';
+
+                                if ($leaveSummary['is_unlimited']) {
+
+                                    $statusClass = 'leave-unlimited';
+                                    $statusText = 'Unlimited';
+
+                                } else {
+
+                                    $entitlement = $leaveSummary['entitlement_days'];
+                                    $remaining = $leaveSummary['remaining_days'];
+
+                                    $percentage = $entitlement > 0 ? ($remaining / $entitlement) * 100 : 0;
+
+                                    if ($percentage <= 25) {
+
+                                        $statusClass = 'leave-danger';
+                                        $statusText = 'Low Balance';
+
+                                    } else if ($percentage <= 50) {
+
+                                        $statusClass = 'leave-warning';
+                                        $statusText = 'Running Low';
+                                        
+                                    } else {
+
+                                        $statusClass = 'leave-safe';
+                                        $statusText = 'Available';
+                                    }
+                                }
+                            @endphp
+
+                            <div class="leave-summary-card {{ $statusClass }}">
+
+                                <div class="leave-summary-header">
+                                    
+                                    <div class="leave-summary-title">
+                                        {{ $leaveSummary['name'] }}
+                                    </div>
+
+                                    <span class="leave-status">{{ $statusText }}</span>
                                 </div>
 
                                 <div class="leave-summary-main">
