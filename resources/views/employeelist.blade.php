@@ -31,7 +31,7 @@
             </div>
 
             {{-- Filter panel --}}
-            <div class="employee-filter-panel mn-3">
+            <div class="employee-filter-panel mb-3">
                 <div class="employee-filter-header">
                     <div class="employee-filter-title">
                         <i class="fa fa-filter"></i>
@@ -39,7 +39,7 @@
                     </div>
                 </div>
 
-                <form method="GET" action="{{ route('employeelist') }}">
+                <form method="GET" action="{{ route('employeelist') }}" class="employee-filter-form">
                     <div class="employee-filter-body">
 
                         <div class="row g-3">

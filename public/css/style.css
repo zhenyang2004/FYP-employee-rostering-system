@@ -1301,3 +1301,325 @@ body {
     background-color: #f1f5f9;
     color: #475569;
 }
+
+/* =========================
+   View Roster 
+========================= */
+
+.roster-week-info {
+    padding: 12px 14px;
+    border-bottom: 1px solid #edf0f3;
+    color: #374151;
+    font-size: 0.9rem;
+    background-color: #ffffff;
+}
+
+.roster-view-table th {
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.roster-view-table th span {
+    color: #64748b;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.roster-view-table td {
+    vertical-align: top;
+    min-width: 150px;
+}
+
+.roster-shift-label {
+    min-width: 130px;
+    background-color: #f8fafc;
+    vertical-align: middle !important;
+}
+
+.roster-shift-label strong {
+    color: #374151;
+    font-size: 0.9rem;
+}
+
+.roster-shift-label small {
+    color: #64748b;
+    font-size: 0.78rem;
+}
+
+.roster-employee-chip {
+    padding: 7px 9px;
+    margin-bottom: 6px;
+    border-radius: 4px;
+    background-color: #eef4ff;
+    border: 1px solid #cfe0ff;
+    color: #1e3a8a;
+    font-size: 0.82rem;
+}
+
+.roster-employee-chip:last-child {
+    margin-bottom: 0;
+}
+
+.roster-employee-name {
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.roster-employee-id {
+    color: #475569;
+    font-size: 0.78rem;
+    margin-bottom: 3px;
+}
+
+.roster-preference-result {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background-color: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #64748b;
+    font-size: 0.72rem;
+    font-weight: 500;
+}
+
+.view-roster-empty {
+    min-height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    color: #64748b;
+}
+
+.view-roster-empty > i {
+    font-size: 2rem;
+    color: #94a3b8;
+}
+
+.view-roster-empty h5 {
+    margin: 0 0 5px 0;
+    color: #374151;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.view-roster-empty p {
+    margin: 0;
+    font-size: 0.88rem;
+}
+
+/* Roster Current user */
+.current-user-shift {
+    background-color: #e8f7ee;
+    border: 2px solid #22c55e;
+    color: #14532d;
+}
+
+.current-user-shift .roster-employee-name {
+    color: #14532d;
+}
+
+.current-user-badge {
+    display: inline-block;
+    margin-left: 5px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    background-color: #22c55e;
+    color: #ffffff;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.current-user-shift .roster-employee-id {
+    color: #166534;
+}
+
+/* Employee card */
+.employee-card-panel {
+    border: 1px solid #dfe3e8;
+    border-radius: 3px;
+    background-color: #ffffff;
+    margin-top: 18px;
+}
+
+.employee-card-panel-header {
+    min-height: 46px;
+    padding: 10px 14px;
+    border-bottom: 1px solid #dfe3e8;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.employee-card-panel-title {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #374151;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.employee-card-panel-body {
+    padding: 16px;
+}
+
+.employee-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 16px;
+}
+
+.employee-profile-card {
+    border: 1px solid #dfe3e8;
+    border-radius: 6px;
+    background-color: #ffffff;
+    padding: 18px 14px;
+    text-align: center;
+    transition: 0.2s ease;
+}
+
+.employee-profile-card:hover {
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+    transform: translateY(-2px);
+}
+
+.employee-card-image-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.employee-card-image {
+    width: 86px;
+    height: 86px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #e5e7eb;
+}
+
+.employee-card-placeholder {
+    width: 86px;
+    height: 86px;
+    border-radius: 50%;
+    background-color: #0d6efd;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 700;
+    border: 3px solid #e5e7eb;
+}
+
+.employee-card-name {
+    color: #111827;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.employee-card-id {
+    color: #64748b;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+}
+
+.employee-card-role {
+    margin-bottom: 14px;
+}
+
+.employee-card-info {
+    border-top: 1px solid #edf0f3;
+    padding-top: 12px;
+    text-align: left;
+}
+
+.employee-card-info-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #374151;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    word-break: break-word;
+}
+
+.employee-card-info-row:last-child {
+    margin-bottom: 0;
+}
+
+.employee-card-info-row i {
+    width: 16px;
+    color: #64748b;
+    text-align: center;
+}
+
+.employee-card-empty {
+    grid-column: 1 / -1;
+    min-height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    color: #64748b;
+    border: 1px solid #dfe3e8;
+    border-radius: 4px;
+    background-color: #ffffff;
+}
+
+.employee-card-empty > i {
+    font-size: 2rem;
+    color: #94a3b8;
+}
+
+.employee-card-empty h5 {
+    margin: 0 0 5px 0;
+    color: #374151;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.employee-card-empty p {
+    margin: 0;
+    font-size: 0.88rem;
+}
+
+.employee-card-actions {
+    margin-top: 13px;
+    padding-top: 12px;
+    border-top: 1px solid #edf0f3;
+    display: flex;
+    justify-content: center;
+}
+
+.employee-view-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-width: 115px;
+    height: 34px;
+    padding: 6px 14px;
+    border-radius: 18px;
+    background-color: #0d6efd;
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.employee-view-btn:hover {
+    background-color: #0b5ed7;
+    color: #ffffff;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(13, 110, 253, 0.25);
+}
+
+.employee-view-btn i {
+    font-size: 0.8rem;
+}
+
