@@ -1109,6 +1109,28 @@ body {
     display: none !important;
 }
 
+.preferences-history-toggle {
+    cursor: pointer;
+    user-select: none;
+}
+
+.preferences-history-toggle-icon {
+    color: #64748b;
+    font-size: 0.85rem;
+}
+
+.preferences-history-toggle-icon i {
+    transition: transform 0.2s ease;
+}
+
+.preferences-history-toggle-icon i.rotate {
+    transform: rotate(180deg);
+}
+
+.d-none {
+    display: none !important;
+}
+
 .manage-request-action-form {
     min-width: 190px;
 }

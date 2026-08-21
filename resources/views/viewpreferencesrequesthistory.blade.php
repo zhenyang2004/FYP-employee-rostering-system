@@ -13,7 +13,7 @@
         <div class="dashboard-content">
             {{-- Breadcrumb --}}
             <div class="dashboard-page-header">
-                <h2>View Preferences</h2>
+                <h2>View Preferences History</h2>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb dashboard-breadcrumb">
                         @foreach ($breadcrumbs as $breadcrumb)
@@ -41,7 +41,7 @@
                     </div>
                     
                     <div class="employee-filter-actions mt-3">
-                        <a href="{{ route('preferencesrequest') }}" class="btn btn-danger" title="Back">
+                        <a href="{{ route('viewemployeedetails', $preferenceRequest->user_id) }}" class="btn btn-danger" title="Back">
                             <i class="fa fa-reply"></i>
                         </a>
                     </div>

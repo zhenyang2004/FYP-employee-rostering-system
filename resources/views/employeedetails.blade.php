@@ -150,7 +150,7 @@
                                 </div>
 
                                 <div class="employee-card-actions">
-                                    <a href="#" class="employee-view-btn">
+                                    <a href="{{ route('viewemployeedetails', $employee->id) }}" class="employee-view-btn">
                                         <i class="fa fa-eye"></i>
                                         View
                                     </a>

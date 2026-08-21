@@ -45,6 +45,8 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('user.logout');
 
 /*Employee details route*/  
 Route::get('/employeedetails', [EmployeeDetailController::class, 'index'])->middleware('auth')->name('employeedetails');
+Route::get('/viewemployeedetails/{id}', [EmployeeDetailController::class, 'viewEmployeeDetail'])->middleware('auth')->name('viewemployeedetails');
+Route::get('/viewpreferencesrequesthistory/{id}', [EmployeeDetailController::class, 'viewPreferencesHistory'])->middleware('auth')->name('viewpreferencesrequesthistory');
 
 /*User profile route*/
 Route::get('/userprofile', [ProfileController::class, 'index'])->middleware('auth')->name('userprofile');

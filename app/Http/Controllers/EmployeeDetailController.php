@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\employee;
+use App\Models\LeaveRequest;
+use App\Models\PreferenceRequest;
 
 class EmployeeDetailController extends Controller
 {
@@ -51,5 +53,63 @@ class EmployeeDetailController extends Controller
         $users = $query->orderBy('id', 'asc')->get();
 
         return view('employeedetails', compact('breadcrumbs', 'users'));
+    }
+
+    public function viewEmployeeDetail($id) {
+
+        $user = User::with('employee')->findOrFail($id);
+        $leaveRequests = LeaveRequest::with('leaveType')->where('user_id', $user->id)->orderBy('created_at', 'asc')->get();
+        $preferenceRequests = PreferenceRequest::where('user_id', $user->id)->orderBy('start_date', 'asc')->get();
+
+        $breadcrumbs = [];
+
+        $breadcrumbs[] = [
+            'text' => 'Home',
+            'url' => route('dashboard')
+        ];
+
+        $breadcrumbs[] = [
+            'text' => 'Employee Details',
+            'url' => route('employeedetails')
+        ];
+
+        $breadcrumbs[] = [
+            'text' => 'View Employee Details',
+            'url' => route('viewemployeedetails', $id)
+        ];
+
+        return view('viewemployeedetails', compact('breadcrumbs', 'user', 'leaveRequests', 'preferenceRequests'));
+
+    }
+
+    public function viewPreferencesHistory($id) {
+
+        $preferenceRequest = PreferenceRequest::with(['preferences' => function ($query) {
+            $query->orderBy('preference_date', 'asc');
+        },'user'])->findOrFail($id);
+
+        $breadcrumbs = [];
+
+        $breadcrumbs[] = [
+            'text' => 'Home',
+            'url' => route('dashboard')
+        ];
+
+        $breadcrumbs[] = [
+            'text' => 'Employee Details',
+            'url' => route('employeedetails')
+        ];
+
+        $breadcrumbs[] = [
+            'text' => 'View Employee Details',
+            'url' => route('viewemployeedetails', $preferenceRequest->user_id)
+        ];
+
+        $breadcrumbs[] = [
+            'text' => 'View Preferences History',
+            'url' => route('viewpreferencesrequesthistory', $preferenceRequest->id)
+        ];
+
+        return view('viewpreferencesrequesthistory', compact('breadcrumbs', 'preferenceRequest')); 
     }
 }
