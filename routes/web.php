@@ -74,6 +74,7 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
 Route::get('/employeelist', [EmployeeListController::class, 'index'])->middleware('auth')->name('employeelist');
 Route::get('/editemployee/{id}', [EmployeeListController::class, 'editEmployee'])->middleware('auth')->name('editemployee');
 Route::post('/employee/{id}', [EmployeeListController::class, 'updateEmployeeRole'])->middleware('auth')->name('employee.updateRole');
+Route::post('/employeelist/{id}/toggle-status', [EmployeeListController::class, 'toggleStatus'])->middleware('auth')->name('employeelist.toggleStatus');
 
 /*Generate roster route*/
 Route::get('/generateroster', [GenerateRosterController::class, 'index'])->middleware('auth')->name('generateroster');

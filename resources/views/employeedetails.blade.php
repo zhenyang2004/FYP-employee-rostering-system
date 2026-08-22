@@ -103,7 +103,7 @@
                     <div class="employee-card-grid">
 
                         @forelse ($users as $employee)
-                            <div class="employee-profile-card">
+                            <div class="employee-profile-card {{ $employee->status == 'Inactive' ? 'inactive-employee-card' : '' }}">
 
                                 {{-- Profile Picture --}}
                                 <div class="employee-card-image-wrapper">
@@ -129,6 +129,12 @@
                                         <span class="badge bg-primary">Manager</span>
                                     @else
                                         <span class="badge bg-secondary">Staff</span>
+                                    @endif
+
+                                    @if ($employee->status == 'Active')
+                                        <span class="employee-status-badge status-active">Active</span>
+                                    @else
+                                        <span class="employee-status-badge status-inactive">Inactive</span>
                                     @endif
                                 </div>
 

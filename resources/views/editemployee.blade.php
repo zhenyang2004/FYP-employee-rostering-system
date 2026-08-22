@@ -34,7 +34,7 @@
                 <div class="profile-panel-header">
                     <div class="profile-panel-title">
                         <div>
-                            <i class="bi bi-pencil-square"></i>
+                            <i class="fa fa-pencil"></i>
                             <span>Edit Employee Role</span>
                         </div>
                     </div>
@@ -74,6 +74,11 @@
                         <div class="profile-form-row">
                             <label>Last Name</label>
                             <input type="text" class="form-control" value="{{ $user->last_name }}" disabled>
+                        </div>
+
+                        <div class="profile-form-row">
+                            <label>Status</label>
+                            <input type="text" class="form-control" value="{{ $user->status }}" disabled>
                         </div>
 
                         <div class="profile-form-row">

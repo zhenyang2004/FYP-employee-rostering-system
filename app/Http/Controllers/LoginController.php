@@ -22,6 +22,19 @@ class LoginController extends Controller
         $remember = $request->has('remember');
 
         if (Auth::attempt($loginCredentials, $remember)) {
+
+            $user = Auth::user();
+
+            if ($user->status == 'Inactive') {
+
+                Auth::logout();
+
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return redirect('/userlogin')->withErrors(['email' => 'Your account is inactive. Please contact the administrator.']);
+            }       
+                 
             $request->session()->regenerate();
 
             return redirect()->route('dashboard');

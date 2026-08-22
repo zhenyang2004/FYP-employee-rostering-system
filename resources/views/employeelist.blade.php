@@ -96,6 +96,12 @@
                         </div>
                     @endif
 
+                    @if ($errors->any())
+                        <div class="alert alert-danger m-3">
+                            {{ $errors->first() }}
+                        </div>
+                    @endif
+
                     <div class="table-responsive">
                         <table class="table table-bordered employee-table">
                             <thead>
@@ -103,6 +109,7 @@
                                     <th>No</th>
                                     <th>Employee ID</th>
                                     <th>Full Name</th>
+                                    <th>Status</th>
                                     <th>Role</th>
                                     <th>Action</th>
                                 </tr>
@@ -115,17 +122,38 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $user->employee_id }}</td>
                                         <td>{{ $user->first_name }} {{ $user->last_name }}</td>
+                                        <td>
+                                            @if ($user->status == 'Active')
+                                                <span class="badge bg-success">Active</span>
+                                            @else
+                                                <span class="badge bg-secondary">Inactive</span>
+                                            @endif
+                                        </td>
                                         <td>{{ $user->employee->role ?? '-' }}</td>
                                         <td>
                                             <a href="{{ route('editemployee', $user->id) }}" class="btn btn-primary btn-sm employee-action-btn" title="Edit">
                                                 <i class="fa fa-pencil"></i>
                                             </a>
+
+                                            <form method="POST" action="{{ route('employeelist.toggleStatus', $user->id) }}" style="display: inline-block;" onsubmit="return confirm('Are you sure you want to change this employee status?');">
+                                                @csrf
+
+                                                @if ($user->status == 'Active')
+                                                    <button type="submit" class="btn btn-danger btn-sm employee-action-btn" title="Set Inactive">
+                                                        <i class="fa fa-ban"></i>
+                                                    </button>
+                                                @else
+                                                    <button type="submit" class="btn btn-success btn-sm employee-action-btn" title="Set Active">
+                                                        <i class="fa fa-check"></i>
+                                                    </button>
+                                                @endif
+                                            </form>
                                         </td>
                                     </tr>
                                     @endforeach
                                 @else
                                     <tr>
-                                        <td colspan="8" class="text-center text-muted">
+                                        <td colspan="6" class="text-center text-muted">
                                             No employee records found.
                                         </td>
                                     </tr>

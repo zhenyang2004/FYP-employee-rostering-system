@@ -1616,6 +1616,36 @@ body {
     justify-content: center;
 }
 
+.inactive-employee-card {
+    background-color: #f8fafc;
+    opacity: 0.72;
+    border: 1px dashed #cbd5e1;
+}
+
+.inactive-employee-card .employee-card-image,
+.inactive-employee-card .employee-card-placeholder {
+    filter: grayscale(100%);
+}
+
+.employee-status-badge {
+    display: inline-block;
+    margin-left: 5px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+
+.status-active {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.status-inactive {
+    background-color: #e5e7eb;
+    color: #4b5563;
+}
+
 .employee-view-btn {
     display: inline-flex;
     align-items: center;

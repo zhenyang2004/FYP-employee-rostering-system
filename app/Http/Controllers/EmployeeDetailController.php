@@ -24,7 +24,9 @@ class EmployeeDetailController extends Controller
             'url' => route('employeedetails')
         ];
 
-        $query = User::with('employee');
+        $query = User::with('employee')->whereHas('employee', function ($q) {
+            $q->whereIn('role', ['Staff', 'Manager']);
+        });
 
         if ($request->filled('employee_id')) {
             $query->where('employee_id', 'like', '%' . $request->employee_id . '%');

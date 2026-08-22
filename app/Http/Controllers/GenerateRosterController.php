@@ -58,7 +58,10 @@ class GenerateRosterController extends Controller
             return back()->withErrors(['roster' => 'Roster for the selected period already exists.'])->withInput();
         }
 
-        $employees = User::with('employee')->whereHas('employee')->get();
+        $employees = User::with('employee')->where('status', 'Active')->whereHas('employee', function ($q) {
+            $q->whereIn('role', ['Staff', 'Manager']);
+        })->orderBy('id', 'asc')->get();
+        
         if ($employees->count() == 0) {
             return back()->withErrors(['roster' => 'No employees found.'])->withInput();
         }
