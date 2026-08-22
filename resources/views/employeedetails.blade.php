@@ -64,6 +64,15 @@
                             </div>
 
                             <div class="col-md-4">
+                                <label class="form-label">Status</label>
+                                <select name="status" class="form-select">
+                                    <option value="">All Status</option>
+                                    <option value="Active" {{ request('status') == 'Active' ? 'selected' : '' }}>Active</option>
+                                    <option value="Inactive" {{ request('status') == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
                                 <label class="form-label">Role</label>
                                 <select name="role" class="form-select">
                                     <option value="">All Roles</option>

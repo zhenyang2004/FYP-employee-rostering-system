@@ -1489,8 +1489,9 @@ body {
 
 .employee-card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    grid-template-columns: repeat(auto-fill, 230px);
     gap: 16px;
+    align-items: start;
 }
 
 .employee-profile-card {

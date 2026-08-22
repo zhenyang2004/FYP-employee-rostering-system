@@ -44,6 +44,12 @@ class EmployeeDetailController extends Controller
             });
         }
 
+        if ($request->filled('status')) {
+            $query->whereHas('employee', function ($q) use ($request) {
+                $q->where('status', $request->status);
+            });
+        }
+
         if ($request->filled('ic_number')) {
             $query->where('ic_number', 'like', '%' . $request->ic_number . '%');
         }
