@@ -2,6 +2,11 @@
 
 @section('content')
 
+@php
+    $currentRole = optional(auth()->user()->employee)->role;
+    $isManager = $currentRole == 'Manager';
+@endphp
+
 <div class="dashboard-page">
 
     @include('layouts.topbar')
@@ -71,6 +76,13 @@
                             <span>Weekly Roster</span>
                         </div>
                     </div>
+
+                    @if ($selectedRoster && $isManager)
+                        <a href="{{ route('editroster', $selectedRoster->id) }}" class="btn btn-primary btn-sm employee-action-btn">
+                            <i class="fa fa-pencil"></i>
+                            Edit Roster
+                        </a>
+                    @endif
                 </div>
 
                 <div class="employee-list-panel-body">
@@ -87,6 +99,33 @@
                             <strong>Roster Period:</strong>
                             {{ \Carbon\Carbon::parse($selectedRoster->start_date)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($selectedRoster->end_date)->format('d/m/Y') }}
                         </div>
+
+                        @if ($isManager && isset($understaffedShifts) && $understaffedShifts->count() > 0)
+                            <div class="alert alert-warning mt-3">
+                                <i class="fa fa-exclamation-triangle"></i>
+                                This roster has {{ $understaffedShifts->count() }} understaffed shift(s). Please review and edit the roster.
+
+                                <div class="mt-2">
+                                    @foreach ($understaffedShifts->take(3) as $shift)
+                                        <div>
+                                            {{ \Carbon\Carbon::parse($shift->roster_date)->format('d/m/Y') }}
+                                            -
+                                            {{ $shift->shift_type }}
+                                            |
+                                            Required: {{ $shift->required_staff }}
+                                            |
+                                            Assigned: {{ $shift->assigned_staff }}
+                                        </div>
+                                    @endforeach
+
+                                    @if ($understaffedShifts->count() > 3)
+                                        <div class="text-muted">
+                                            + {{ $understaffedShifts->count() - 3 }} more understaffed shift(s)
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endif
 
                         <div class="table-responsive">
                             <table class="table table-bordered employee-table roster-view-table">
@@ -118,8 +157,8 @@
                                                 @php
                                                     $dateKey = $date->format('Y-m-d');
                                                     $assignedDetails = $groupedRoster[$dateKey][$shiftType] ?? [];
+                                                    $requirement = $groupedRequirements[$dateKey][$shiftType] ?? null;
                                                 @endphp
-
                                                 <td>
                                                     @if (count($assignedDetails) > 0)
 
@@ -152,6 +191,27 @@
                                                         @endforeach
                                                     @else
                                                         <span class="text-muted">-</span>
+                                                    @endif
+
+                                                    @if ($isManager && $requirement)
+                                                        @php
+                                                            $isFilled = $requirement->assigned_staff >= $requirement->required_staff;
+                                                        @endphp
+
+                                                        <div class="roster-shift-status mt-2">
+                                                            <small class="text-muted">
+                                                                Required: {{ $requirement->required_staff }}
+                                                                |
+                                                                Assigned: {{ $requirement->assigned_staff }}
+                                                            </small>
+                                                            <br>
+
+                                                            @if ($isFilled)
+                                                                <span class="badge bg-success mt-1">Filled</span>
+                                                            @else
+                                                                <span class="badge bg-danger mt-1">Understaffed</span>
+                                                            @endif
+                                                        </div>
                                                     @endif
                                                 </td>
                                             @endforeach

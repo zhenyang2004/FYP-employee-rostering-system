@@ -107,3 +107,6 @@ Route::post('/managerequest/{id}', [ManageRequestController::class, 'updateLeave
 
 /*View roster route*/
 Route::get('/viewroster', [ViewRosterController::class, 'index'])->middleware('auth')->name('viewroster');
+Route::get('/editroster/{id}', [ViewRosterController::class, 'editRoster'])->middleware('auth')->name('editroster');
+Route::post('/editroster/{id}/add-staff', [ViewRosterController::class, 'addRosterStaff'])->middleware('auth')->name('editroster.addStaff');
+Route::post('/editroster/{id}/remove-staff', [ViewRosterController::class, 'removeRosterStaff'])->middleware('auth')->name('editroster.removeStaff');

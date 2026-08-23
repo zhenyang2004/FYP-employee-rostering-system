@@ -5,11 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\EmployeePreference;
 use App\Models\PreferenceRequest;
+use App\Models\Roster;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class PreferenceRequestController extends Controller
 {
+
+    public function isRosterGenerated($startDate, $endDate) {
+        
+        return Roster::whereDate('start_date', $startDate)->whereDate('end_date', $endDate)->exists();
+    }
     public function index() {
 
         $breadcrumbs = [];
@@ -25,6 +31,10 @@ class PreferenceRequestController extends Controller
         ];
 
         $preferenceRequests = PreferenceRequest::where('user_id', auth()->id())->orderBy('start_date', 'asc')->get();
+
+        foreach ($preferenceRequests as $preferenceRequest) {
+            $preferenceRequest->roster_generated = $this->isRosterGenerated($preferenceRequest->start_date, $preferenceRequest->end_date);
+        }
 
         return view('preferencesrequest', compact('breadcrumbs', 'preferenceRequests')); 
 
@@ -77,6 +87,10 @@ class PreferenceRequestController extends Controller
 
         if ($validated['end_date'] != $expectedEndDate) {
             return back()->withErrors(['end_date' => 'End date must be exactly 7 days from the start date.'])->withInput();
+        }
+
+        if ($this->isRosterGenerated($validated['start_date'], $validated['end_date'])) {
+            return back()->withErrors(['preferences' => 'Preference request cannot be submitted. The roster for this week has already been generated.'])->withInput();
         }
 
         // Check for same date that already submitted
@@ -170,8 +184,8 @@ class PreferenceRequestController extends Controller
             $query->orderBy('preference_date', 'asc');
         }])->where('user_id', auth()->id())->findOrFail($id);
 
-        if (Carbon::parse($preferenceRequest->start_date)->lte(Carbon::today())) {
-            return redirect()->route('preferencesrequest')->withErrors(['preferences' => 'You can only edit preferences for future dates.']);
+        if ($this->isRosterGenerated($preferenceRequest->start_date, $preferenceRequest->end_date)) {
+            return redirect()->route('preferencesrequest')->withErrors(['preferences' => 'This preference request cannot be edited. The roster for this week has already been generated.']);
         }
 
         return view('editpreferencesrequest', compact('breadcrumbs', 'preferenceRequest')); 
@@ -182,8 +196,8 @@ class PreferenceRequestController extends Controller
 
         $preferenceRequest = PreferenceRequest::where('user_id', auth()->id())->findOrFail($id);
 
-        if (Carbon::parse($preferenceRequest->start_date)->lte(Carbon::today())) {
-            return redirect()->route('preferencesrequest')->withErrors(['preferences' => 'You can only edit preferences for future dates.']);
+        if ($this->isRosterGenerated($preferenceRequest->start_date, $preferenceRequest->end_date)) {
+            return redirect()->route('preferencesrequest')->withErrors(['preferences' => 'This preference request cannot be edited. The roster for this week has already been generated.']);
         }
 
         $validated = $request->validate([

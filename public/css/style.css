@@ -1676,3 +1676,39 @@ body {
     font-size: 0.8rem;
 }
 
+.edit-roster-chip {
+    position: relative;
+    padding-right: 28px;
+}
+
+.roster-remove-form {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    margin: 0;
+}
+
+.roster-remove-btn {
+    width: 18px;
+    height: 18px;
+    border: none;
+    border-radius: 50%;
+    background-color: #ef4444;
+    color: #ffffff;
+    font-size: 10px;
+    line-height: 18px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.roster-remove-btn:hover {
+    background-color: #dc2626;
+}
+
+.roster-remove-btn i {
+    font-size: 10px;
+}
+

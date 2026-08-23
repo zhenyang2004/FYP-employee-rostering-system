@@ -159,8 +159,8 @@
                 <div class="employee-list-panel-body">
                     <ol class="mb-0">
                         <li>One employee only assigned to one shift per day.</li>
-                        <li>Employee marked as Unavailable will not be assigned.</li>
-                        <li>Preferred Shift will be prioritised where possible.</li>
+                        <li>Employees on approved leave or marked as Unavailable will not be assigned.</li>
+                        <li>Employees who selected a preferred shift will be prioritised for their selected shift posiblity.</li>
                         <li>Any Shift employees will be used to fill remaining slots.</li>
                         <li>If multiple employees match the same shift, employees with fewer assigned shifts will be prioritised.</li>
                     </ol>
@@ -183,6 +183,10 @@
                         'Afternoon Shift' => '14:00 - 22:00',
                         'Night Shift' => '22:00 - 06:00',
                     ];
+
+                    $hasUnderstaffed = collect($rosterPreviewSession['roster_preview'])->contains(function ($shift) {
+                        return $shift['status'] == 'Understaffed';                        
+                    });
                 @endphp
 
                 <div class="employee-list-panel mb-3">
@@ -200,6 +204,13 @@
                             <strong>Roster Period</strong>
                             {{ \Carbon\Carbon::parse($rosterPreviewSession['start_date'])->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($rosterPreviewSession['end_date'])->format('d/m/Y') }}
                         </div>
+
+                        @if ($hasUnderstaffed)
+                            <div class="alert alert-warning">
+                                <i class="fa fa-exclamation-triangle"></i>
+                                This roster contains understaffed shifts. Please review the required staff or save the roster with understaffed status.
+                            </div>
+                        @endif
 
                         <div class="table-responsive">
                             <table class="table table-bordered roster-calendar-table">
@@ -294,9 +305,9 @@
                             <form method="POST" action="{{ route('generateroster.save') }}">
                                 @csrf
 
-                                <button type="submit" class="btn btn-success">
+                                <button type="submit" class="btn {{ $hasUnderstaffed ? 'btn-warning' : 'btn-success' }}">
                                     <i class="fa fa-save"></i>
-                                    Save Roster
+                                    {{ $hasUnderstaffed ? 'Save Roster with Understaffed Shifts' : 'Save Roster' }}
                                 </button>
                             </form>
                         </div>

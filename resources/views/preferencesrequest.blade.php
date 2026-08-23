@@ -146,8 +146,8 @@
                                             <td>{{ \Carbon\Carbon::parse($preferenceRequest->start_date)->format('d/m/Y') }}</td>
                                             <td>{{ \Carbon\Carbon::parse($preferenceRequest->end_date)->format('d/m/Y') }}</td>
                                             <td>
-                                                 @php
-                                                    $canEdit = \Carbon\Carbon::parse($preferenceRequest->start_date)->gt(\Carbon\Carbon::today());
+                                                @php
+                                                    $canEdit = !$preferenceRequest->roster_generated;
                                                 @endphp
 
                                                 <a href="{{ url('/viewpreferencesrequest', $preferenceRequest->id) }}" class="btn btn-primary btn-sm employee-action-btn" title="View">

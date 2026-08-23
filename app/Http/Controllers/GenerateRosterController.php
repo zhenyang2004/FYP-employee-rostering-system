@@ -8,6 +8,7 @@ use App\Models\EmployeePreference;
 use App\Models\Roster;
 use App\Models\RosterShiftRequirement;
 use App\Models\RosterDetail;
+use App\Models\LeaveRequest;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -101,6 +102,11 @@ class GenerateRosterController extends Controller
 
             $preferences = EmployeePreference::whereDate('preference_date', $rosterDate)->get()->keyBy('user_id');
 
+            $leaveUserIds = LeaveRequest::where('status', 'Approved')->whereDate('start_date', '<=', $rosterDate)->whereDate('end_date', '>=', $rosterDate)->pluck('user_id')->toArray();
+            $availableEmployees = $employees->reject(function ($employee) use ($leaveUserIds) {
+                return in_array($employee->id, $leaveUserIds);
+            });
+
             $assignedToday = [];
 
             $dailyShiftPreview = [];
@@ -125,7 +131,7 @@ class GenerateRosterController extends Controller
             foreach ($shifts as $shift) {
                 $candidates = [];
 
-                foreach ($employees as $employee) {
+                foreach ($availableEmployees as $employee) {
                     if (in_array($employee->id, $assignedToday)) {
                         continue;
                     }
@@ -150,9 +156,7 @@ class GenerateRosterController extends Controller
                     }
                 }
 
-                usort($candidates, function ($a, $b) {
-                    return $a['assigned_count'] <=> $b['assigned_count']; 
-                });
+                $this->sortCandidatesByFairness($candidates);
 
                 $this->assignCandidatesToShift($dailyShiftPreview[$shift['key']], $candidates, $assignedToday, $assignedCount);
             }
@@ -161,7 +165,7 @@ class GenerateRosterController extends Controller
             foreach ($shifts as $shift) {
                 $candidates = [];
 
-                foreach ($employees as $employee) {
+                foreach ($availableEmployees as $employee) {
                     if (in_array($employee->id, $assignedToday)) {
                         continue;
                     }
@@ -192,9 +196,7 @@ class GenerateRosterController extends Controller
                     }
                 }
 
-                usort($candidates, function ($a, $b) {
-                    return $a['assigned_count'] <=> $b['assigned_count'];
-                });
+                $this->sortCandidatesByFairness($candidates);
 
                 $this->assignCandidatesToShift($dailyShiftPreview[$shift['key']], $candidates, $assignedToday, $assignedCount);
             }
@@ -203,7 +205,7 @@ class GenerateRosterController extends Controller
             foreach ($shifts as $shift) {
                 $candidates = [];
 
-                foreach ($employees as $employee) {
+                foreach ($availableEmployees as $employee) {
                     if (in_array($employee->id, $assignedToday)) {
                         continue;
                     }
@@ -222,9 +224,7 @@ class GenerateRosterController extends Controller
                     ];
                 }
 
-                usort($candidates, function ($a, $b) {
-                    return $a['assigned_count'] <=> $b['assigned_count'];
-                });
+                $this->sortCandidatesByFairness($candidates);
 
                 $this->assignCandidatesToShift($dailyShiftPreview[$shift['key']], $candidates, $assignedToday, $assignedCount);
             }
@@ -233,7 +233,7 @@ class GenerateRosterController extends Controller
             foreach ($shifts as $shift) {
                 $candidates = [];
 
-                foreach ($employees as $employee) {
+                foreach ($availableEmployees as $employee) {
                     if (in_array($employee->id, $assignedToday)) {
                         continue;
                     }
@@ -258,9 +258,7 @@ class GenerateRosterController extends Controller
                     }
                 }
 
-                usort($candidates, function ($a, $b) {
-                    return $a['assigned_count'] <=> $b['assigned_count'];
-                });
+                $this->sortCandidatesByFairness($candidates);
 
                 $this->assignCandidatesToShift($dailyShiftPreview[$shift['key']], $candidates, $assignedToday, $assignedCount);
             }
@@ -310,6 +308,22 @@ class GenerateRosterController extends Controller
             $assignedToday[] = $employee->id;
             $assignedCount[$employee->id]++;
         }
+    }
+
+    private function sortCandidatesByFairness(&$candidates) {
+
+        foreach ($candidates as $index => $candidate) {
+            $candidates[$index]['random_order'] = rand(1, 999999);
+        }
+
+        usort($candidates, function ($a, $b) {
+            if ($a['assigned_count'] == $b['assigned_count']) {
+                
+                return $a['random_order'] <=> $b['random_order'];
+            }
+
+            return $a['assigned_count'] <=> $b['assigned_count'];
+        });
     }
 
     public function save() {

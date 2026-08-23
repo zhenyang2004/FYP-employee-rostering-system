@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\LeaveRequest;
+use App\Models\RosterDetail;
+use App\Models\RosterShiftRequirement;
+use App\Models\RosterAdjustmentLog;
+use Illuminate\Support\Facades\DB;
 
 class ManageRequestController extends Controller
 {
@@ -59,13 +63,60 @@ class ManageRequestController extends Controller
             return redirect()->route('managerequest')->withErrors(['leave_request' => 'This leave request has already been reviewed.']);
         }
 
-        $leaveRequest->update([
-            'status' => $validated['status'],
-            'manager_remark' => $validated['manager_remark'],
-            'reviewed_by' => auth()->id(),
-            'reviewed_at' => now(),
-        ]);
+        DB::beginTransaction();
 
-        return redirect()->route('managerequest')->with('success', 'Leave request updated successfully.');
+        try {
+            $leaveRequest->update([
+                'status' => $validated['status'],
+                'manager_remark' => $validated['manager_remark'],
+                'reviewed_by' => auth()->id(),
+                'reviewed_at' => now(),
+            ]);
+
+            if ($validated['status'] == 'Approved') {
+
+                $affectedRosterDetails = RosterDetail::where('user_id', $leaveRequest->user_id)->whereDate('roster_date' , '>=', $leaveRequest->start_date)->whereDate('roster_date' , '<=', $leaveRequest->end_date)->get();
+                $affectedShiftRequirementIds = $affectedRosterDetails->pluck('roster_shift_requirement_id')->unique()->toArray();
+                $removeRosterCount = $affectedRosterDetails->count();
+
+                foreach ($affectedRosterDetails as $detail) {
+                    RosterAdjustmentLog::create([
+                        'roster_id' => $detail->roster_id,
+                        'roster_shift_requirement_id' => $detail->roster_shift_requirement_id,
+                        'leave_request_id' => $leaveRequest->id,
+                        'user_id' => $leaveRequest->user_id,
+                        'roster_date' => $detail->roster_date,
+                        'shift_type' => $detail->shift_type,
+                        'reason' => 'Removed due to approved leave',
+                        'status' => 'Unresolved',
+                    ]);
+                }
+
+                if ($removeRosterCount > 0) {
+                    RosterDetail::whereIn('id', $affectedRosterDetails->pluck('id'))->delete();
+                }
+
+                foreach ($affectedShiftRequirementIds as $shiftRequirementId) {
+                    
+                    $shiftRequirement = RosterShiftRequirement::find($shiftRequirementId);
+                    
+                    if  ($shiftRequirement) {
+                        $assignedStaff = RosterDetail::where('roster_shift_requirement_id', $shiftRequirement->id)->count();
+
+                        $shiftRequirement->update([
+                            'assigned_staff' => $assignedStaff,
+                            'status' => $assignedStaff >= $shiftRequirement->required_staff ? 'Filled' : 'Understaffed',
+                        ]);
+                    }
+                }
+            }
+
+            DB::commit();
+
+            return redirect()->route('managerequest')->with('success', 'Leave request updated successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('managerequest')->withErrors(['leave_request' => 'Something went wrong. Please try again.']);
+        }
     }
 }
