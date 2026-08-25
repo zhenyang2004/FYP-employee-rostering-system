@@ -100,6 +100,7 @@ Route::post('/setting', [SettingController::class, 'saveLeaveType'])->middleware
 Route::post('/setting/{id}', [SettingController::class, 'destroyLeaveType'])->middleware('auth')->name('setting.leavetype.destroy');
 Route::get('editleavetype/{id}', [SettingController::class, 'editLeaveType'])->middleware('auth')->name('editleavetype');
 Route::post('/editleavetype/{id}', [SettingController::class, 'updateLeaveType'])->middleware('auth')->name('setting.leavetype.update');
+Route::post('/setting/roster/update', [SettingController::class, 'updateRosterSetting'])->middleware('auth')->name('setting.roster.update');
 
 /*Manage request route*/
 Route::get('/managerequest', [ManageRequestController::class, 'index'])->middleware('auth')->name('managerequest');

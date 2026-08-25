@@ -178,10 +178,12 @@
                         $weekDates[] = $startDate->copy()->addDays($i);
                     }
 
+                    $previewByShift = collect($rosterPreviewSession['roster_preview'])->groupBy('shift_type');
+
                     $shiftTypes = [
-                        'Morning Shift' => '08:00 - 16:00',
-                        'Afternoon Shift' => '14:00 - 22:00',
-                        'Night Shift' => '22:00 - 06:00',
+                        'Morning Shift',
+                        'Afternoon Shift',
+                        'Night Shift',
                     ];
 
                     $hasUnderstaffed = collect($rosterPreviewSession['roster_preview'])->contains(function ($shift) {
@@ -228,7 +230,17 @@
                                 </thead>
 
                                 <tbody>
-                                    @foreach ($shiftTypes as $shiftType => $shiftTime)
+                                    @foreach ($shiftTypes as $shiftType)
+
+                                        @php
+                                            $firstShift = $previewByShift[$shiftType][0] ?? null;
+                                            $shiftTime = '-';
+
+                                            if ($firstShift) {
+                                                $shiftTime = \Carbon\Carbon::parse($firstShift['shift_start_time'])->format('H:i') . ' - ' . \Carbon\Carbon::parse($firstShift['shift_end_time'])->format('H:i');
+                                            }
+                                        @endphp
+                                        
                                         <tr>
                                             <td class="shift-cell">
                                                 {{ $shiftType }}

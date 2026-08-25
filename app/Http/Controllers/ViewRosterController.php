@@ -10,6 +10,7 @@ use App\Models\RosterAdjustmentLog;
 use App\Models\User;
 use App\Models\LeaveRequest;
 use App\Models\EmployeePreference;
+use App\Models\RosterSetting;
 
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
@@ -77,20 +78,7 @@ class ViewRosterController extends Controller
             }
         }
 
-        $shiftTypes = [
-            'Morning Shift' => [
-                'label' => 'Morning',
-                'time' => '08:00 - 16:00'
-            ],
-            'Afternoon Shift' => [
-                'label' => 'Afternoon',
-                'time' => '14:00 - 22:00'
-            ],
-            'Night Shift' => [
-                'label' => 'Night',
-                'time' => '22:00 - 06:00'
-            ],
-        ];
+        $shiftTypes = $this->getShiftTypes($selectedRoster);
 
         return view('viewroster', compact('breadcrumbs', 'rosters', 'selectedRoster', 'dates', 'groupedRoster', 'shiftTypes', 'groupedRequirements', 'understaffedShifts', 'adjustmentLogs'));
     }
@@ -152,26 +140,17 @@ class ViewRosterController extends Controller
             $availableStaff[$dateKey][$requirement->shift_type] = $this->getAvailableStaffForShift($roster->id, $requirement);
         }
 
-        $shiftTypes = [
-            'Morning Shift' => [
-                'label' => 'Morning',
-                'time' => '08:00 - 16:00'
-            ],
-            'Afternoon Shift' => [
-                'label' => 'Afternoon',
-                'time' => '14:00 - 22:00'
-            ],
-            'Night Shift' => [
-                'label' => 'Night',
-                'time' => '22:00 - 06:00'
-            ],
-        ];
+        $shiftTypes = $this->getShiftTypes($roster);
 
         return view('editroster', compact('breadcrumbs', 'roster', 'dates', 'groupedRoster', 'groupedRequirements', 'availableStaff', 'understaffedShifts', 'shiftTypes'));
     }
 
     // Get staff who is active, not on leave, not assigned to this shift and not marked as unavailable
     private function getAvailableStaffForShift($rosterId, $requirement) {
+
+        $settings = RosterSetting::getSettings();
+        $maxWeeklyHours = $settings->max_weekly_hours;
+        $shiftHours = $settings->shift_duration_hours;
 
         $rosterDate = Carbon::parse($requirement->roster_date)->format('Y-m-d');
 
@@ -182,6 +161,11 @@ class ViewRosterController extends Controller
         $employees = User::with('employee')->where('status', 'Active')->whereHas('employee', function ($q) {
             $q->whereIn('role', ['Staff', 'Manager']);
         })->whereNotIn('id', $leaveUserIds)->whereNotIn('id', $assignedUserIds)->whereNotIn('id', $unavailableUserIds)->get();
+
+        $employees = $employees->filter(function ($employee) use ($rosterId, $maxWeeklyHours, $shiftHours) {
+            $weeklyAssignedHours = RosterDetail::where('roster_id', $rosterId)->where('user_id', $employee->id)->count() * $shiftHours;
+            return ($weeklyAssignedHours + $shiftHours) <= $maxWeeklyHours;
+        })->values();
 
         return $employees;
 
@@ -203,7 +187,7 @@ class ViewRosterController extends Controller
         $requirement = RosterShiftRequirement::where('roster_id', $roster->id)->where('id', $validated['roster_shift_requirement_id'])->firstOrFail();
 
         if ($requirement->assigned_staff >= $requirement->required_staff) {
-            return redirect()->route('viewroster')->withErrors(['roster' => 'This shift is already filled.']);
+            return redirect()->route('editroster', $roster->id)->withErrors(['roster' => 'This shift is already filled.']);
         }
 
         $user = User::with('employee')->where('id', $validated['user_id'])->where('status', 'Active')->whereHas('employee', function ($q) {
@@ -211,6 +195,16 @@ class ViewRosterController extends Controller
         })->firstOrFail();
 
         $rosterDate = Carbon::parse($requirement->roster_date)->format('Y-m-d');
+
+        $settings = RosterSetting::getSettings();
+        $maxWeeklyHours = $settings->max_weekly_hours;
+        $shiftHours = $settings->shift_duration_hours;
+
+        $weeklyAssignedHours = RosterDetail::where('roster_id', $roster->id)->where('user_id', $user->id)->count() * $shiftHours;
+
+        if (($weeklyAssignedHours + $shiftHours) > $maxWeeklyHours) {
+            return redirect()->route('editroster', $roster->id)->withErrors(['roster' => 'This user has already reached the maximum' . $maxWeeklyHours . ' working hours per week.']);
+        }
 
         $hasLeave = LeaveRequest::where('user_id', $user->id)->where('status', 'Approved')->whereDate('start_date', '<=', $rosterDate)->whereDate('end_date', '>=', $rosterDate)->exists();
 
@@ -281,7 +275,7 @@ class ViewRosterController extends Controller
             RosterAdjustmentLog::where('roster_id', $roster->id)->where('roster_shift_requirement_id', $requirement->id)->where('status', 'Unresolved')->update(['status' => 'Resolved']);
         }
 
-        return redirect()->route('editroster', $roster->id)->with('success', 'Shift assigned to roster successfully.');
+        return redirect()->route('editroster', $roster->id)->with('success', 'Staff assigned to roster successfully.');
     }
 
     public function removeRosterStaff(Request $request, $id) {
@@ -310,10 +304,50 @@ class ViewRosterController extends Controller
             ]);
         }
 
-        return redirect()->route('editroster', $roster->id)->with('success', 'Shift removed from roster successfully.');
+        return redirect()->route('editroster', $roster->id)->with('success', 'Staff removed from roster successfully.');
     }
 
-    
+    private function getShiftTypes($roster = null) {
+        $settings = RosterSetting::getSettings();
+
+        $shiftTypes = [
+            'Morning Shift' => [
+                'label' => 'Morning',
+                'start' => $settings->morning_start_time,
+                'end' => $settings->morning_end_time,
+            ],
+            'Afternoon Shift' => [
+                'label' => 'Afternoon',
+                'start' => $settings->afternoon_start_time,
+                'end' => $settings->afternoon_end_time,
+            ],
+            'Night Shift' => [
+                'label' => 'Night',
+                'start' => $settings->night_start_time,
+                'end' => $settings->night_end_time,
+            ],
+        ];
+
+        if ($roster) {
+            $requirements = RosterShiftRequirement::where('roster_id', $roster->id)->get()->keyBy('shift_type');
+
+            foreach ($shiftTypes as $shiftType => $shiftInfo) {
+                if (isset($requirements[$shiftType])) {
+                    $shiftTypes[$shiftType]['start'] = $requirements[$shiftType]->shift_start_time;
+                    $shiftTypes[$shiftType]['end'] = $requirements[$shiftType]->shift_end_time;
+                }
+            }
+        }
+
+        foreach ($shiftTypes as $shiftType => $shiftInfo) {
+            $shiftTypes[$shiftType]['time'] =
+                Carbon::parse($shiftInfo['start'])->format('H:i') .
+                ' - ' .
+                Carbon::parse($shiftInfo['end'])->format('H:i');
+        }
+
+        return $shiftTypes;
+    }
 }
 
 

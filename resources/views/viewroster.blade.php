@@ -100,29 +100,43 @@
                             {{ \Carbon\Carbon::parse($selectedRoster->start_date)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($selectedRoster->end_date)->format('d/m/Y') }}
                         </div>
 
-                        @if ($isManager && isset($understaffedShifts) && $understaffedShifts->count() > 0)
+                        @if ($isManager && isset($adjustmentLogs) && $adjustmentLogs->count() > 0)
+
+                            @php
+                                $understaffedCount = isset($understaffedShifts) ? $understaffedShifts->count() : 0;
+                            @endphp
+
                             <div class="alert alert-warning mt-3">
                                 <i class="fa fa-exclamation-triangle"></i>
-                                This roster has {{ $understaffedShifts->count() }} understaffed shift(s). Please review and edit the roster.
+                                <strong>Roster Alert</strong>
+                                <div class="mt-2">
+                                    This roster has {{ $understaffedCount }} understaffed shift(s). Staff has been removed. Please review and edit the roster.
+                                </div>
 
                                 <div class="mt-2">
-                                    @foreach ($understaffedShifts->take(3) as $shift)
-                                        <div>
-                                            {{ \Carbon\Carbon::parse($shift->roster_date)->format('d/m/Y') }}
+                                    @foreach ($adjustmentLogs as $log)
+                                        @php
+                                            $relatedRequirement = $groupedRequirements[\Carbon\Carbon::parse($log->roster_date)->format('Y-m-d')][$log->shift_type] ?? null;
+                                        @endphp
+
+                                        <div class="mb-1">
+                                            {{ \Carbon\Carbon::parse($log->roster_date)->format('d/m/Y') }}
                                             -
-                                            {{ $shift->shift_type }}
-                                            |
-                                            Required: {{ $shift->required_staff }}
-                                            |
-                                            Assigned: {{ $shift->assigned_staff }}
+                                            {{ $log->shift_type }}
+
+                                            @if ($relatedRequirement)
+                                                |
+                                                Required: {{ $relatedRequirement->required_staff }}
+                                                |
+                                                Assigned: {{ $relatedRequirement->assigned_staff }}
+                                            @endif
+
+                                            (
+                                                {{ $log->user->first_name ?? '' }} {{ $log->user->last_name ?? '' }}
+                                                was removed from this roster.
+                                            )
                                         </div>
                                     @endforeach
-
-                                    @if ($understaffedShifts->count() > 3)
-                                        <div class="text-muted">
-                                            + {{ $understaffedShifts->count() - 3 }} more understaffed shift(s)
-                                        </div>
-                                    @endif
                                 </div>
                             </div>
                         @endif

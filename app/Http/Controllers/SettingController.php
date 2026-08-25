@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\LeaveType;
+use App\Models\RosterSetting;
 use Illuminate\Validation\Rule;
 
 class SettingController extends Controller
@@ -23,8 +24,9 @@ class SettingController extends Controller
         ];
 
         $leaveTypes = LeaveType::orderBy('name', 'asc')->get();
+        $rosterSetting = RosterSetting::getSettings();
 
-        return view('setting', compact('breadcrumbs', 'leaveTypes'));
+        return view('setting', compact('breadcrumbs', 'leaveTypes', 'rosterSetting'));
     }
 
     public function saveLeaveType(Request $request) {
@@ -40,7 +42,7 @@ class SettingController extends Controller
             'status' => 'Enabled',
         ]);
 
-        return redirect()->route('setting')->with('success', 'Leave type added successfully!');
+        return redirect()->route('setting')->with('success', 'Leave type added successfully!')->with('active_tab', 'leave-types');
     }
 
     public function destroyLeaveType($id) {
@@ -48,7 +50,7 @@ class SettingController extends Controller
         $leaveType = LeaveType::findOrFail($id);
         $leaveType->delete();
 
-        return redirect()->route('setting')->with('success', 'Leave type deleted successfully!');
+        return redirect()->route('setting')->with('success', 'Leave type deleted successfully!')->with('active_tab', 'leave-types');
     }
 
     public function editLeaveType($id) {
@@ -93,6 +95,38 @@ class SettingController extends Controller
             'status' => $validated['status'],
         ]);
 
-        return redirect()->route('setting')->with('success', 'Leave type updated successfully!');
+        return redirect()->route('setting')->with('success', 'Leave type updated successfully!')->with('active_tab', 'leave-types');
+    }
+
+    public function updateRosterSetting(Request $request) {
+
+        $validated = $request->validate([
+            'max_weekly_hours' => 'required|integer|min:1',
+            'shift_duration_hours' => 'required|integer|min:1',
+
+            'morning_start_time' => 'required|date_format:H:i',
+            'morning_end_time' => 'required|date_format:H:i',
+
+            'afternoon_start_time' => 'required|date_format:H:i',
+            'afternoon_end_time' => 'required|date_format:H:i',
+
+            'night_start_time' => 'required|date_format:H:i',
+            'night_end_time' => 'required|date_format:H:i',
+        ]);
+
+        $rosterSetting = RosterSetting::getSettings();
+
+        $rosterSetting->update([
+            'max_weekly_hours' => $validated['max_weekly_hours'],
+            'shift_duration_hours' => $validated['shift_duration_hours'],
+            'morning_start_time' => $validated['morning_start_time'] . ':00',
+            'morning_end_time' => $validated['morning_end_time'] . ':00',
+            'afternoon_start_time' => $validated['afternoon_start_time'] . ':00',
+            'afternoon_end_time' => $validated['afternoon_end_time'] . ':00',
+            'night_start_time' => $validated['night_start_time'] . ':00',
+            'night_end_time' => $validated['night_end_time'] . ':00',
+        ]);
+
+        return redirect()->route('setting')->with('success', 'Roster settings updated successfully!')->with('active_tab', 'general');
     }
 }

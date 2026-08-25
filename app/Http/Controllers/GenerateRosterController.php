@@ -9,6 +9,7 @@ use App\Models\Roster;
 use App\Models\RosterShiftRequirement;
 use App\Models\RosterDetail;
 use App\Models\LeaveRequest;
+use App\Models\RosterSetting;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -67,31 +68,41 @@ class GenerateRosterController extends Controller
             return back()->withErrors(['roster' => 'No employees found.'])->withInput();
         }
 
+        $settings = RosterSetting::getSettings();
+
+        $maxWeeklyHours = $settings->max_weekly_hours;
+        $shiftDurationHours = $settings->shift_duration_hours;
+
         $shifts = [
             [
                 'key' => 'morning',
                 'type' => 'Morning Shift',
-                'start' => '08:00:00',
-                'end' => '16:00:00',
+                'start' => $settings->morning_start_time,
+                'end' => $settings->morning_end_time,
+                'duration_hours' => $shiftDurationHours
             ],
             [
                 'key' => 'afternoon',
                 'type' => 'Afternoon Shift',
-                'start' => '14:00:00',
-                'end' => '22:00:00',
+                'start' => $settings->afternoon_start_time,
+                'end' => $settings->afternoon_end_time,
+                'duration_hours' => $shiftDurationHours
             ],
             [
                 'key' => 'night',
                 'type' => 'Night Shift',
-                'start' => '22:00:00',
-                'end' => '06:00:00',
+                'start' => $settings->night_start_time,
+                'end' => $settings->night_end_time,
+                'duration_hours' => $shiftDurationHours
             ],
         ];
 
         $assignedCount = [];
+        $assignedHours = [];
 
         foreach ($employees as $employee) {
             $assignedCount[$employee->id] = 0;
+            $assignedHours[$employee->id] = 0;
         }
 
         $rosterPreview = [];
@@ -136,6 +147,10 @@ class GenerateRosterController extends Controller
                         continue;
                     }
 
+                    if ($assignedHours[$employee->id] + $shift['duration_hours'] > $maxWeeklyHours) {
+                        continue;
+                    }
+
                     $preference = $preferences->get($employee->id);
 
                     if (!$preference) {
@@ -150,6 +165,7 @@ class GenerateRosterController extends Controller
                         $candidates[] = [
                             'user' => $employee,
                             'assigned_count' => $assignedCount[$employee->id],
+                            'assigned_hours' => $assignedHours[$employee->id],
                             'preference_type' => 'Preferred Shift',
                             'preference_result' => 'Matched',
                         ];
@@ -158,7 +174,7 @@ class GenerateRosterController extends Controller
 
                 $this->sortCandidatesByFairness($candidates);
 
-                $this->assignCandidatesToShift($dailyShiftPreview[$shift['key']], $candidates, $assignedToday, $assignedCount);
+                $this->assignCandidatesToShift($dailyShiftPreview[$shift['key']], $candidates, $assignedToday, $assignedCount, $assignedHours, $shift['duration_hours']);
             }
 
             // Step 2: Fill remaining slots with Any Shift employees
@@ -167,6 +183,10 @@ class GenerateRosterController extends Controller
 
                 foreach ($availableEmployees as $employee) {
                     if (in_array($employee->id, $assignedToday)) {
+                        continue;
+                    }
+
+                    if ($assignedHours[$employee->id] + $shift['duration_hours'] > $maxWeeklyHours) {
                         continue;
                     }
 
@@ -190,6 +210,7 @@ class GenerateRosterController extends Controller
                         $candidates[] = [
                             'user' => $employee,
                             'assigned_count' => $assignedCount[$employee->id],
+                            'assigned_hours' => $assignedHours[$employee->id],
                             'preference_type' => 'Any Shift',
                             'preference_result' => 'Assigned',
                         ];
@@ -198,7 +219,7 @@ class GenerateRosterController extends Controller
 
                 $this->sortCandidatesByFairness($candidates);
 
-                $this->assignCandidatesToShift($dailyShiftPreview[$shift['key']], $candidates, $assignedToday, $assignedCount);
+                $this->assignCandidatesToShift($dailyShiftPreview[$shift['key']], $candidates, $assignedToday, $assignedCount, $assignedHours, $shift['duration_hours']);
             }
 
             // Step 3: Fill remaining slots with employees who have no preference
@@ -207,6 +228,10 @@ class GenerateRosterController extends Controller
 
                 foreach ($availableEmployees as $employee) {
                     if (in_array($employee->id, $assignedToday)) {
+                        continue;
+                    }
+
+                    if ($assignedHours[$employee->id] + $shift['duration_hours'] > $maxWeeklyHours) {
                         continue;
                     }
 
@@ -219,6 +244,7 @@ class GenerateRosterController extends Controller
                     $candidates[] = [
                         'user' => $employee,
                         'assigned_count' => $assignedCount[$employee->id],
+                        'assigned_hours' => $assignedHours[$employee->id],
                         'preference_type' => 'No Preference',
                         'preference_result' => 'No Preference',
                     ];
@@ -226,7 +252,7 @@ class GenerateRosterController extends Controller
 
                 $this->sortCandidatesByFairness($candidates);
 
-                $this->assignCandidatesToShift($dailyShiftPreview[$shift['key']], $candidates, $assignedToday, $assignedCount);
+                $this->assignCandidatesToShift($dailyShiftPreview[$shift['key']], $candidates, $assignedToday, $assignedCount, $assignedHours, $shift['duration_hours']);
             }
 
             // Step 4: If still not enough, use employees whose preferred shift cannot be matched
@@ -235,6 +261,10 @@ class GenerateRosterController extends Controller
 
                 foreach ($availableEmployees as $employee) {
                     if (in_array($employee->id, $assignedToday)) {
+                        continue;
+                    }
+
+                    if ($assignedHours[$employee->id] + $shift['duration_hours'] > $maxWeeklyHours) {
                         continue;
                     }
 
@@ -252,6 +282,7 @@ class GenerateRosterController extends Controller
                         $candidates[] = [
                             'user' => $employee,
                             'assigned_count' => $assignedCount[$employee->id],
+                            'assigned_hours' => $assignedHours[$employee->id],
                             'preference_type' => 'Preferred Shift',
                             'preference_result' => 'Not Matched',
                         ];
@@ -260,7 +291,7 @@ class GenerateRosterController extends Controller
 
                 $this->sortCandidatesByFairness($candidates);
 
-                $this->assignCandidatesToShift($dailyShiftPreview[$shift['key']], $candidates, $assignedToday, $assignedCount);
+                $this->assignCandidatesToShift($dailyShiftPreview[$shift['key']], $candidates, $assignedToday, $assignedCount, $assignedHours, $shift['duration_hours']);
             }
 
             foreach ($dailyShiftPreview as $shiftPreview) {
@@ -285,7 +316,7 @@ class GenerateRosterController extends Controller
         return redirect()->route('generateroster')->with('success', 'Roster preview generated successfully!');
     }
 
-    private function assignCandidatesToShift(&$shiftPreview, $candidates, &$assignedToday, &$assignedCount) {
+    private function assignCandidatesToShift(&$shiftPreview, $candidates, &$assignedToday, &$assignedCount, &$assignedHours, $shiftHours) {
         
         $remainingSlots = $shiftPreview['required_staff'] - count($shiftPreview['assigned_employees']);
 
@@ -303,10 +334,11 @@ class GenerateRosterController extends Controller
                 'employee_name' => $employee->first_name . ' ' . $employee->last_name,
                 'preference_type' => $selected['preference_type'],
                 'preference_result' => $selected['preference_result'],
-            ];
+            ];  
 
             $assignedToday[] = $employee->id;
             $assignedCount[$employee->id]++;
+            $assignedHours[$employee->id] += $shiftHours;
         }
     }
 
@@ -317,12 +349,15 @@ class GenerateRosterController extends Controller
         }
 
         usort($candidates, function ($a, $b) {
-            if ($a['assigned_count'] == $b['assigned_count']) {
+            if ($a['assigned_hours'] == $b['assigned_hours']) {
                 
-                return $a['random_order'] <=> $b['random_order'];
+                if ($a['assigned_count'] == $b['assigned_count']) {
+                    return $a['random_order'] <=> $b['random_order'];
+                }
+                return $a['assigned_count'] <=> $b['assigned_count'];
             }
 
-            return $a['assigned_count'] <=> $b['assigned_count'];
+            return $a['assigned_hours'] <=> $b['assigned_hours'];
         });
     }
 

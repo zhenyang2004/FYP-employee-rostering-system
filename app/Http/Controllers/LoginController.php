@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\employee;
 
 class LoginController extends Controller
 {
@@ -33,7 +35,12 @@ class LoginController extends Controller
                 $request->session()->regenerateToken();
 
                 return redirect('/userlogin')->withErrors(['email' => 'Your account is inactive. Please contact the administrator.']);
-            }       
+            }
+
+            if (optional(auth()->user()->employee)->role == 'Admin') {
+                return redirect()->route('employeelist');
+            }
+
                  
             $request->session()->regenerate();
 

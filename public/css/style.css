@@ -1017,6 +1017,20 @@ body {
     margin-right: 4px;
 }
 
+.shift-time-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.shift-time-input {
+    max-width: 150px;
+}
+
+.shift-time-separator {
+    font-weight: 600;
+    color: #64748b;
+}
 
 /* =========================
    Buttons
@@ -1041,37 +1055,6 @@ body {
 .settings-form-actions .btn i {
     margin-right: 4px;
 }
-
-
-/* =========================
-   Empty future tabs
-========================= */
-
-.settings-empty-content {
-    min-height: 180px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 14px;
-    color: #64748b;
-}
-
-.settings-empty-content > i {
-    font-size: 2rem;
-    color: #94a3b8;
-}
-
-.settings-empty-content strong {
-    display: block;
-    color: #374151;
-    margin-bottom: 3px;
-}
-
-.settings-empty-content p {
-    margin: 0;
-    font-size: 0.88rem;
-}
-
 
 /* =========================
    Responsive
