@@ -168,6 +168,18 @@
                         </div>
                     </div>
                 </div>
+
+                {{-- Manage Shift Swap Request --}}
+                <div class="employee-list-panel">
+                    <div class="employee-list-panel-header">
+                        <div class="employee-list-panel-title">
+                            <div>
+                                <i class="fa fa-exchange"></i>
+                                <span>Manage Shift Swap Request</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             @endif
         </div>
     </div>

@@ -63,6 +63,14 @@
                 </li>
 
                 <li class="sidebar-item">
+                    <a href="{{ url('shiftswaprequest') }}" class="{{ request()->is('shiftswaprequest') ? 'active' : '' }}">
+                        <i class="fa fa-exchange"></i>
+                            <span>Shift Swap Requests</span>
+                            <i class="bi bi-chevron-right ms-auto"></i>
+                    </a>
+                </li>
+
+                <li class="sidebar-item">
                     <a href="{{ url('managerequest') }}" class="{{ request()->is('managerequest') ? 'active' : '' }}">
                         <i class="fa fa-tasks"></i>
                             <span>Manage Requests</span>

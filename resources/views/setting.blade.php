@@ -56,7 +56,7 @@
                         <div class="profile-panel-header">
                             <div class="profile-panel-title">
                                 <div>
-                                    <i class="fa fa-calendar-check"></i>
+                                    <i class="fa fa-calendar-plus-o"></i>
                                     <span>Roster Rule Settings</span>
                                 </div>
                             </div>

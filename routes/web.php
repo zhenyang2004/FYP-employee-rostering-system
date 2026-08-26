@@ -15,6 +15,7 @@ use App\Http\Controllers\EmployeeDetailController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ManageRequestController;
 use App\Http\Controllers\ViewRosterController;
+use App\Http\Controllers\ShiftSwapRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -111,3 +112,7 @@ Route::get('/viewroster', [ViewRosterController::class, 'index'])->middleware('a
 Route::get('/editroster/{id}', [ViewRosterController::class, 'editRoster'])->middleware('auth')->name('editroster');
 Route::post('/editroster/{id}/add-staff', [ViewRosterController::class, 'addRosterStaff'])->middleware('auth')->name('editroster.addStaff');
 Route::post('/editroster/{id}/remove-staff', [ViewRosterController::class, 'removeRosterStaff'])->middleware('auth')->name('editroster.removeStaff');
+
+/*Shift swap route*/
+Route::get('shiftswaprequest', [ShiftSwapRequestController::class, 'index'])->middleware('auth')->name('shiftswaprequest');
+Route::post('shiftswaprequest/store', [ShiftSwapRequestController::class, 'store'])->middleware('auth')->name('shiftswaprequest.store');
