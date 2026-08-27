@@ -106,6 +106,8 @@ Route::post('/setting/roster/update', [SettingController::class, 'updateRosterSe
 /*Manage request route*/
 Route::get('/managerequest', [ManageRequestController::class, 'index'])->middleware('auth')->name('managerequest');
 Route::post('/managerequest/{id}', [ManageRequestController::class, 'updateLeaveRequest'])->middleware('auth')->name('managerequest.leave.status');
+Route::post('/managerequest/shiftswap/{id}/update', [ManageRequestController::class, 'updateShiftSwapRequest'])->middleware('auth')->name('managerequest.shiftswap.update');
+
 
 /*View roster route*/
 Route::get('/viewroster', [ViewRosterController::class, 'index'])->middleware('auth')->name('viewroster');
@@ -116,3 +118,5 @@ Route::post('/editroster/{id}/remove-staff', [ViewRosterController::class, 'remo
 /*Shift swap route*/
 Route::get('shiftswaprequest', [ShiftSwapRequestController::class, 'index'])->middleware('auth')->name('shiftswaprequest');
 Route::post('shiftswaprequest/store', [ShiftSwapRequestController::class, 'store'])->middleware('auth')->name('shiftswaprequest.store');
+Route::post('shiftswaprequest/{id}/accept', [ShiftSwapRequestController::class, 'accept'])->middleware('auth')->name('shiftswaprequest.accept');
+Route::post('shiftswaprequest/{id}/reject', [ShiftSwapRequestController::class, 'reject'])->middleware('auth')->name('shiftswaprequest.reject');

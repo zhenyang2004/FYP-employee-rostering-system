@@ -43,8 +43,8 @@ class ShiftSwapRequestController extends Controller
             $targetRosterDetails = RosterDetail::with(['user', 'roster'])->where('roster_id', $selectedRosterId)->where('user_id', '!=', $userId)->whereDate('roster_date', '>', Carbon::today())->orderBy('roster_date', 'asc')->orderBy('shift_type', 'asc')->get();
         }
 
-        $myShiftSwapRequests = ShiftSwapRequest::with(['targetUser', 'requesterRosterDetail', 'targetRosterDetail'])->where('requester_user_id', $userId)->orderBy('created_at', 'desc')->get();
-        $requestsToMe = ShiftSwapRequest::with(['requester', 'requesterRosterDetail', 'targetRosterDetail'])->where('target_user_id', $userId)->orderBy('created_at', 'desc')->get();
+        $myShiftSwapRequests = ShiftSwapRequest::with(['targetUser', 'requesterRosterDetail', 'targetRosterDetail'])->where('requester_user_id', $userId)->orderBy('created_at', 'asc')->get();
+        $requestsToMe = ShiftSwapRequest::with(['requester', 'requesterRosterDetail', 'targetRosterDetail'])->where('target_user_id', $userId)->orderBy('created_at', 'asc')->get();
 
         return view('shiftswaprequest', compact('breadcrumbs', 'rosters', 'selectedRosterId', 'myRosterDetails', 'targetRosterDetails', 'myShiftSwapRequests', 'requestsToMe'));
     }
@@ -85,5 +85,29 @@ class ShiftSwapRequestController extends Controller
 
         return redirect()->route('shiftswaprequest', ['roster_id' => $validated['roster_id']])->with('success', 'Shift swap request submitted successfully.');
         
+    }
+
+    public function accept($id) {
+
+        $swapRequest = ShiftSwapRequest::where('id', $id)->where('target_user_id', auth()->id())->where('status', 'Pending Staff Approval')->firstOrFail();
+
+        $swapRequest->update([
+            'status' => 'Pending Manager Approval',
+            'target_responded_at' => Carbon::now(),
+        ]);
+
+        return redirect()->route('shiftswaprequest')->with('success', 'Shift swap request accepted successfully. It is now pending manager approval.');
+    }
+
+    public function reject($id) {
+
+        $swapRequest = ShiftSwapRequest::where('id', $id)->where('target_user_id', auth()->id())->where('status', 'Pending Staff Approval')->firstOrFail();
+
+        $swapRequest->update([
+            'status' => 'Rejected by Staff',
+            'target_responded_at' => Carbon::now(),
+        ]);
+
+        return redirect()->route('shiftswaprequest')->with('success', 'Shift swap request rejected successfully.');
     }
 }

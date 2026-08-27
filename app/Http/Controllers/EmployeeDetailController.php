@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\employee;
 use App\Models\LeaveRequest;
 use App\Models\PreferenceRequest;
+use App\Models\ShiftSwapRequest;
 
 class EmployeeDetailController extends Controller
 {
@@ -68,6 +69,7 @@ class EmployeeDetailController extends Controller
         $user = User::with('employee')->findOrFail($id);
         $leaveRequests = LeaveRequest::with('leaveType')->where('user_id', $user->id)->orderBy('created_at', 'asc')->get();
         $preferenceRequests = PreferenceRequest::where('user_id', $user->id)->orderBy('start_date', 'asc')->get();
+        $shiftSwapRequests = ShiftSwapRequest::with(['targetUser', 'requesterRosterDetail', 'targetRosterDetail', 'reviewer'])->where('requester_user_id', $user->id)->orderBy('created_at', 'asc')->get();
 
         $breadcrumbs = [];
 
@@ -86,7 +88,7 @@ class EmployeeDetailController extends Controller
             'url' => route('viewemployeedetails', $id)
         ];
 
-        return view('viewemployeedetails', compact('breadcrumbs', 'user', 'leaveRequests', 'preferenceRequests'));
+        return view('viewemployeedetails', compact('breadcrumbs', 'user', 'leaveRequests', 'preferenceRequests', 'shiftSwapRequests'));
 
     }
 

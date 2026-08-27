@@ -149,8 +149,8 @@
                 <div class="profile-panel-header">
                     <div class="profile-panel-title">
                         <div>
-                            <i class="fa fa-paper-plane"></i>
-                            <span>Shift Swap Requests I Sent</span>
+                            <i class="fa fa-history"></i>
+                            <span>Shift Swap Requests History</span>
                         </div>
                     </div>
                 </div>
@@ -241,7 +241,7 @@
                 <div class="profile-panel-header">
                     <div class="profile-panel-title">
                         <div>
-                            <i class="fa fa-inbox"></i>
+                            <i class="fa fa-paper-plane"></i>
                             <span>Shift Swap Requests to Me</span>
                         </div>
                     </div>
@@ -317,15 +317,21 @@
                                         </td>
                                         <td>
                                             @if ($swapRequest->status == 'Pending Staff Approval')
-                                                <button type="button" class="btn btn-success btn-sm">
-                                                    Accept
-                                                </button>
+                                                <form method="POST" action="{{ route('shiftswaprequest.accept', $swapRequest->id) }}" style="display: inline-block;">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-success btn-sm">
+                                                        Accept
+                                                    </button>
+                                                </form>
 
-                                                <button type="button" class="btn btn-danger btn-sm">
-                                                    Reject
-                                                </button>
+                                                <form method="POST" action="{{ route('shiftswaprequest.reject', $swapRequest->id) }}" style="display: inline-block;">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-danger btn-sm">
+                                                        Reject
+                                                    </button>
+                                                </form>
                                             @else
-                                                <span class="text-muted">No action required</span>
+                                                <span class="text-muted">Reviewed</span>
                                             @endif
                                         </td>
                                     </tr>

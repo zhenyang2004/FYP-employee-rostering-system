@@ -228,6 +228,127 @@
                     </div>
                 </div>
             </div>
+
+            {{-- Shift Swap Request History --}}
+            <div class="profile-panel mb-3">
+                <div class="profile-panel-header preferences-history-toggle" id="shiftswapHistoryToggle">
+                    <div class="profile-panel-title">
+                        <div>
+                            <i class="fa fa-history"></i>
+                            <span>Shift Swap Request History</span>
+                        </div>
+                    </div>
+
+                    <div class="leave-history-toggle-icon">
+                        <i class="fa fa-chevron-down" id="shiftswapHistoryIcon"></i>
+                    </div>
+                </div>
+
+                <div class="employee-list-panel-body" id="shiftswapHistoryBody">
+                    <div class="table-responsive">
+                        <table class="table table-bordered employee-table">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Swap With</th>
+                                    <th>My Shift</th>
+                                    <th>Target Shift</th>
+                                    <th>Reason</th>
+                                    <th>Status</th>
+                                    <th>Submitted At</th>
+                                    <th>Manager Remarks</th>
+                                    <th>Reviewed By</th>
+                                    <th>Reviewed At</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @forelse ($shiftSwapRequests as $index => $swapRequest)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $swapRequest->targetUser->first_name }} {{ $swapRequest->targetUser->last_name }}</td>
+                                        <td>
+                                            @if ($swapRequest->requesterRosterDetail)
+                                                <strong>
+                                                    {{ \Carbon\Carbon::parse($swapRequest->requesterRosterDetail->roster_date)->format('d/m/Y') }}
+                                                </strong>
+                                                <br>
+                                                {{ $swapRequest->requesterRosterDetail->shift_type }}
+                                                <br>
+                                                <small class="text-muted">
+                                                    {{ \Carbon\Carbon::parse($swapRequest->requesterRosterDetail->shift_start_time)->format('H:i') }}
+                                                    -
+                                                    {{ \Carbon\Carbon::parse($swapRequest->requesterRosterDetail->shift_end_time)->format('H:i') }}
+                                                </small>
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($swapRequest->targetRosterDetail)
+                                                <strong>
+                                                    {{ \Carbon\Carbon::parse($swapRequest->targetRosterDetail->roster_date)->format('d/m/Y') }}
+                                                </strong>
+                                                <br>
+                                                {{ $swapRequest->targetRosterDetail->shift_type }}
+                                                <br>
+                                                <small class="text-muted">
+                                                    {{ \Carbon\Carbon::parse($swapRequest->targetRosterDetail->shift_start_time)->format('H:i') }}
+                                                    -
+                                                    {{ \Carbon\Carbon::parse($swapRequest->targetRosterDetail->shift_end_time)->format('H:i') }}
+                                                </small>
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
+                                        <td>{{ $swapRequest->reason ?? '-' }}</td>
+                                        <td>
+                                            @if ($swapRequest->status == 'Pending Staff Approval')
+                                                <span class="badge bg-warning text-dark">Pending Staff Approval</span>
+                                            @elseif ($swapRequest->status == 'Pending Manager Approval')
+                                                <span class="badge bg-info text-dark">Pending Manager Approval</span>
+                                            @elseif ($swapRequest->status == 'Approved')
+                                                <span class="badge bg-success">Approved</span>
+                                            @elseif ($swapRequest->status == 'Rejected by Staff')
+                                                <span class="badge bg-danger">Rejected by Staff</span>
+                                            @elseif ($swapRequest->status == 'Rejected by Manager')
+                                                <span class="badge bg-danger">Rejected by Manager</span>
+                                            @elseif ($swapRequest->status == 'Cancelled')
+                                                <span class="badge bg-secondary">Cancelled</span>
+                                            @else
+                                                <span class="badge bg-secondary">{{ $swapRequest->status }}</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            {{ $swapRequest->created_at->format('d/m/Y H:i') }}
+                                        </td>
+                                        <td>{{ $swapRequest->manager_remark ?? '-' }}</td>
+                                        <td>
+                                            @if ($swapRequest->reviewer)
+                                                {{ $swapRequest->reviewer->first_name }}
+                                                {{ $swapRequest->reviewer->last_name }}
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($swapRequest->reviewed_at)
+                                                {{ \Carbon\Carbon::parse($swapRequest->reviewed_at)->format('d/m/Y H:i') }}
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="12" class="text-center text-muted">No shift swap requests found !</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -240,6 +361,9 @@
     const preferencesHistoryToggle = document.getElementById('preferencesHistoryToggle');
     const preferencesHistoryBody = document.getElementById('preferencesHistoryBody');
     const preferencesHistoryIcon = document.getElementById('preferencesHistoryIcon');
+    const shiftswapHistoryToggle = document.getElementById('shiftswapHistoryToggle');
+    const shiftswapHistoryBody = document.getElementById('shiftswapHistoryBody');
+    const shiftswapHistoryIcon = document.getElementById('shiftswapHistoryIcon');
 
     leaveHistoryToggle.addEventListener('click', function () {
         leaveHistoryBody.classList.toggle('d-none');
@@ -250,6 +374,13 @@
         preferencesHistoryToggle.addEventListener('click', function () {
             preferencesHistoryBody.classList.toggle('d-none');
             preferencesHistoryIcon.classList.toggle('rotate');
+        });
+    }
+
+    if (shiftswapHistoryToggle && shiftswapHistoryBody && shiftswapHistoryIcon) {
+        shiftswapHistoryToggle.addEventListener('click', function () {
+            shiftswapHistoryBody.classList.toggle('d-none');
+            shiftswapHistoryIcon.classList.toggle('rotate');
         });
     }
 </script>
