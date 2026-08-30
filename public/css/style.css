@@ -1695,3 +1695,334 @@ body {
     font-size: 10px;
 }
 
+.dashboard-top-summary-row {
+    display: flex;
+    gap: 16px;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    width: 100%;
+    margin-bottom: 18px;
+}
+
+.dashboard-top-summary-row > .employee-list-panel {
+    margin-top: 0;
+}
+
+/* Top row panels */
+.next-shift-panel,
+.manage-request-summary-panel,
+.week-work-summary-panel,
+.dashboard-quick-action-panel {
+    flex: 1 1 0;
+    width: auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Panel header */
+.next-shift-panel .employee-list-panel-header,
+.manage-request-summary-panel .employee-list-panel-header,
+.week-work-summary-panel .employee-list-panel-header,
+.dashboard-quick-action-panel .employee-list-panel-header {
+    min-height: 44px;
+    padding: 10px 14px;
+}
+
+/* Panel body */
+.next-shift-panel .employee-list-panel-body,
+.manage-request-summary-panel .employee-list-panel-body,
+.week-work-summary-panel .employee-list-panel-body,
+.dashboard-quick-action-panel .employee-list-panel-body {
+    padding: 12px 14px;
+    flex: 1;
+}
+
+/* Make inner cards same height */
+.next-shift-card,
+.manage-request-summary-card,
+.week-work-summary-card,
+.dashboard-quick-action-card {
+    width: 100%;
+    height: 100%;
+    min-height: 150px;
+}
+
+/* =========================
+   Next Shift Card
+========================= */
+
+.next-shift-card {
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #16a34a;
+    border-radius: 8px;
+    background-color: #ffffff;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.next-shift-date {
+    color: #64748b;
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+}
+
+.next-shift-main {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 6px;
+}
+
+.next-shift-time {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+/* =========================
+   Manager Manage Request Card
+========================= */
+
+.manage-request-summary-card {
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #2563eb;
+    border-radius: 8px;
+    background-color: #ffffff;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.manage-request-summary-card.manage-request-alert {
+    border-left-color: #f59e0b;
+    background-color: #fffbeb;
+}
+
+.manage-request-summary-main {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.2;
+    margin-bottom: 4px;
+}
+
+.manage-request-summary-title {
+    color: #64748b;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+}
+
+.manage-request-summary-detail {
+    color: #64748b;
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+}
+
+.manage-request-summary-action {
+    margin-top: 8px;
+}
+
+/* =========================
+   My Request Summary
+========================= */
+
+.request-summary-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+}
+
+.request-summary-card {
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #2563eb;
+    border-radius: 8px;
+    background-color: #ffffff;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.request-summary-card.request-summary-alert {
+    border-left-color: #f59e0b;
+    background-color: #fffbeb;
+}
+
+.request-summary-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-color: #eff6ff;
+    color: #2563eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.request-summary-alert .request-summary-icon {
+    background-color: #fef3c7;
+    color: #d97706;
+}
+
+.request-summary-title {
+    font-size: 0.9rem;
+    color: #64748b;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.request-summary-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.2;
+}
+
+/* =========================
+   This Week Work Summary
+========================= */
+
+.week-work-summary-card {
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #2563eb;
+    border-radius: 8px;
+    background-color: #ffffff;
+    padding: 18px;
+}
+
+.week-work-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.week-work-summary-item {
+    text-align: center;
+    border: 1px solid #edf0f3;
+    border-radius: 6px;
+    padding: 8px 6px;
+    background-color: #f8fafc;
+}
+
+.week-work-summary-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.2;
+}
+
+.week-work-summary-label {
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.week-work-hours {
+    border-top: 1px solid #edf0f3;
+    padding-top: 10px;
+}
+
+.week-work-hours-label {
+    font-size: 0.82rem;
+    color: #64748b;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.week-work-hours-value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 8px;
+}
+
+.week-work-progress-native {
+    width: 100%;
+    height: 7px;
+    border: none;
+    border-radius: 999px;
+    overflow: hidden;
+    background-color: #e5e7eb;
+}
+
+.week-work-progress-native::-webkit-progress-bar {
+    background-color: #e5e7eb;
+    border-radius: 999px;
+}
+
+.week-work-progress-native::-webkit-progress-value {
+    background-color: #2563eb;
+    border-radius: 999px;
+}
+
+.week-work-progress-native::-moz-progress-bar {
+    background-color: #2563eb;
+    border-radius: 999px;
+}
+
+/* =========================
+   Quick Actions Card
+========================= */
+
+.dashboard-quick-action-card {
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #0d6efd;
+    border-radius: 8px;
+    background-color: #ffffff;
+    padding: 12px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.dashboard-quick-action-link {
+    border: 1px solid #dbeafe;
+    border-radius: 6px;
+    background-color: #eff6ff;
+    color: #0d6efd;
+    text-decoration: none;
+    padding: 12px 8px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-align: center;
+    transition: 0.2s ease;
+    min-height: 80px;
+}
+
+.dashboard-quick-action-link:hover {
+    background-color: #0d6efd;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.dashboard-quick-action-link i {
+    font-size: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .dashboard-top-summary-row {
+        flex-wrap: wrap;
+    }
+
+    .next-shift-panel,
+    .manage-request-summary-panel,
+    .week-work-summary-panel,
+    .dashboard-quick-action-panel {
+        flex: 1 1 320px;
+    }
+}
+

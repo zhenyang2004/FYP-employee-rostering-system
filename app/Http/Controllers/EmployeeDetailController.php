@@ -11,6 +11,10 @@ use App\Models\ShiftSwapRequest;
 
 class EmployeeDetailController extends Controller
 {
+
+    private function isManager() {
+        return optional(auth()->user()->employee)->role == 'Manager';
+    }
     public function index(Request $request) {
 
         $breadcrumbs = [];
@@ -24,6 +28,12 @@ class EmployeeDetailController extends Controller
             'text' => 'Employee Details',
             'url' => route('employeedetails')
         ];
+
+        $hasPermission = $this->isManager();
+        if (!$hasPermission) {
+            $users = collect();
+            return view('employeedetails', compact('breadcrumbs', 'users', 'hasPermission'));
+        }
 
         $query = User::with('employee')->whereHas('employee', function ($q) {
             $q->whereIn('role', ['Staff', 'Manager']);
@@ -61,10 +71,14 @@ class EmployeeDetailController extends Controller
 
         $users = $query->orderBy('id', 'asc')->get();
 
-        return view('employeedetails', compact('breadcrumbs', 'users'));
+        return view('employeedetails', compact('breadcrumbs', 'users', 'hasPermission'));
     }
 
     public function viewEmployeeDetail($id) {
+
+        if (!$this->isManager()) {
+            return redirect()->route('employeedetails')->withErrors(['permission' => 'You do not have permission to view employee details.']);
+        }
 
         $user = User::with('employee')->findOrFail($id);
         $leaveRequests = LeaveRequest::with('leaveType')->where('user_id', $user->id)->orderBy('created_at', 'asc')->get();
@@ -93,6 +107,10 @@ class EmployeeDetailController extends Controller
     }
 
     public function viewPreferencesHistory($id) {
+
+        if (!$this->isManager()) {
+            return redirect()->route('employeedetails')->withErrors(['permission' => 'You do not have permission to view employee details.']);
+        }
 
         $preferenceRequest = PreferenceRequest::with(['preferences' => function ($query) {
             $query->orderBy('preference_date', 'asc');

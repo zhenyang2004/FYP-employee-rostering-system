@@ -30,159 +30,182 @@
                 </nav>
             </div>
 
-            {{-- Filter panel --}}
-            <div class="employee-filter-panel mb-3">
-                <div class="employee-filter-header">
-                    <div class="employee-filter-title">
-                        <i class="fa fa-filter"></i>
-                        <span>Filter</span>
-                    </div>
-                </div>
-
-                <form method="GET" action="{{ route('employeedetails') }}" class="employee-filter-form">
-                    <div class="employee-filter-body">
-
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <label class="form-label">Employee ID</label>
-                                <input type="text" name="employee_id" class="form-control" placeholder="Employee ID" value="{{ request('employee_id') }}">
-                            </div>
-
-                            <div class="col-md-4">
-                                <label class="form-label">Full Name</label>
-                                <input type="text" name="name" class="form-control" placeholder="Full Name" value="{{ request('name') }}">
-                            </div>
-
-                            <div class="col-md-4">
-                                <label class="form-label">IC Number</label>
-                                <input type="text" name="ic_number" class="form-control" placeholder="IC Number" value="{{ request('ic_number') }}">
-                            </div>
-
-                            <div class="col-md-4">
-                                <label class="form-label">Phone Number</label>
-                                <input type="text" name="phone_number" class="form-control" placeholder="Phone Number" value="{{ request('phone_number') }}">
-                            </div>
-
-                            <div class="col-md-4">
-                                <label class="form-label">Status</label>
-                                <select name="status" class="form-select">
-                                    <option value="">All Status</option>
-                                    <option value="Active" {{ request('status') == 'Active' ? 'selected' : '' }}>Active</option>
-                                    <option value="Inactive" {{ request('status') == 'Inactive' ? 'selected' : '' }}>Inactive</option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label class="form-label">Role</label>
-                                <select name="role" class="form-select">
-                                    <option value="">All Roles</option>
-                                    <option value="Staff" {{ request('role') == 'Staff' ? 'selected' : '' }}>Staff</option>
-                                    <option value="Manager" {{ request('role') == 'Manager' ? 'selected' : '' }}>Manager</option>
-                                </select>
+            @if (!$hasPermission)
+                <div class="employee-list-panel">
+                    <div class="employee-list-panel-header">
+                        <div class="employee-list-panel-title">
+                            <div>
+                                <i class="fa fa-lock"></i>
+                                <span>Permission Denied</span>
                             </div>
                         </div>
-
-                        <div class="employee-filter-actions">
-                            <a href="{{ route('employeedetails') }}" class="btn btn-secondary">
-                                <i class="fa fa-refresh"></i>
-                                Reset
-                            </a>
-
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fa fa-filter"></i>
-                                Filter
-                            </button>
-                        </div>
                     </div>
-                </form>
-            </div>
 
-            {{-- Employee Details Cards --}}
-            <div class="employee-card-panel">
-                <div class="employee-card-panel-header">
-                    <div class="employee-card-panel-title">
-                        <div>
-                            <i class="fa fa-users"></i>
-                            <span>Employee Details</span>
+                    <div class="employee-list-panel-body">
+                        <div class="manage-permission-message">
+                            <i class="fa fa-exclamation-circle"></i>
+                            <div>
+                                <h5>You do not have permission to access this page!</h5>
+                                <p>Only managers are allowed to view employee details.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="employee-card-panel-body">
-                    <div class="employee-card-grid">
+            @else
+                {{-- Filter panel --}}
+                <div class="employee-filter-panel mb-3">
+                    <div class="employee-filter-header">
+                        <div class="employee-filter-title">
+                            <i class="fa fa-filter"></i>
+                            <span>Filter</span>
+                        </div>
+                    </div>
 
-                        @forelse ($users as $employee)
-                            <div class="employee-profile-card {{ $employee->status == 'Inactive' ? 'inactive-employee-card' : '' }}">
+                    <form method="GET" action="{{ route('employeedetails') }}" class="employee-filter-form">
+                        <div class="employee-filter-body">
 
-                                {{-- Profile Picture --}}
-                                <div class="employee-card-image-wrapper">
-                                    @if ($employee->profile_pic)
-                                        <img src="{{ asset('storage/' . $employee->profile_pic) }}" alt="Profile Picture" class="employee-card-image">
-                                    @else
-                                        <div class="employee-card-placeholder">
-                                            <i class="bi bi-person-circle"></i>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label">Employee ID</label>
+                                    <input type="text" name="employee_id" class="form-control" placeholder="Employee ID" value="{{ request('employee_id') }}">
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label">Full Name</label>
+                                    <input type="text" name="name" class="form-control" placeholder="Full Name" value="{{ request('name') }}">
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label">IC Number</label>
+                                    <input type="text" name="ic_number" class="form-control" placeholder="IC Number" value="{{ request('ic_number') }}">
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label">Phone Number</label>
+                                    <input type="text" name="phone_number" class="form-control" placeholder="Phone Number" value="{{ request('phone_number') }}">
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label">Status</label>
+                                    <select name="status" class="form-select">
+                                        <option value="">All Status</option>
+                                        <option value="Active" {{ request('status') == 'Active' ? 'selected' : '' }}>Active</option>
+                                        <option value="Inactive" {{ request('status') == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label">Role</label>
+                                    <select name="role" class="form-select">
+                                        <option value="">All Roles</option>
+                                        <option value="Staff" {{ request('role') == 'Staff' ? 'selected' : '' }}>Staff</option>
+                                        <option value="Manager" {{ request('role') == 'Manager' ? 'selected' : '' }}>Manager</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="employee-filter-actions">
+                                <a href="{{ route('employeedetails') }}" class="btn btn-secondary">
+                                    <i class="fa fa-refresh"></i>
+                                    Reset
+                                </a>
+
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-filter"></i>
+                                    Filter
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                {{-- Employee Details Cards --}}
+                <div class="employee-card-panel">
+                    <div class="employee-card-panel-header">
+                        <div class="employee-card-panel-title">
+                            <div>
+                                <i class="fa fa-users"></i>
+                                <span>Employee Details</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="employee-card-panel-body">
+                        <div class="employee-card-grid">
+
+                            @forelse ($users as $employee)
+                                <div class="employee-profile-card {{ $employee->status == 'Inactive' ? 'inactive-employee-card' : '' }}">
+
+                                    {{-- Profile Picture --}}
+                                    <div class="employee-card-image-wrapper">
+                                        @if ($employee->profile_pic)
+                                            <img src="{{ asset('storage/' . $employee->profile_pic) }}" alt="Profile Picture" class="employee-card-image">
+                                        @else
+                                            <div class="employee-card-placeholder">
+                                                <i class="bi bi-person-circle"></i>
+                                            </div>
+                                        @endif  
+                                    </div>
+
+                                    <div class="employee-card-name">
+                                        {{ $employee->first_name }} {{ $employee->last_name }}
+                                    </div>
+
+                                    <div class="employee-card-id">
+                                        {{ $employee->employee_id }}
+                                    </div>
+
+                                    <div class="employee-card-role">
+                                        @if (optional($employee->employee)->role == 'Manager')
+                                            <span class="badge bg-primary">Manager</span>
+                                        @else
+                                            <span class="badge bg-secondary">Staff</span>
+                                        @endif
+
+                                        @if ($employee->status == 'Active')
+                                            <span class="employee-status-badge status-active">Active</span>
+                                        @else
+                                            <span class="employee-status-badge status-inactive">Inactive</span>
+                                        @endif
+                                    </div>
+
+                                    <div class="employee-card-info">
+                                        <div class="employee-card-info-row">
+                                            <i class="fa fa-envelope"></i>
+                                            <span>{{ $employee->email }}</span>
                                         </div>
-                                    @endif  
-                                </div>
 
-                                <div class="employee-card-name">
-                                    {{ $employee->first_name }} {{ $employee->last_name }}
-                                </div>
+                                        <div class="employee-card-info-row">
+                                            <i class="fa fa-phone"></i>
+                                            <span>{{ $employee->phone_number }}</span>
+                                        </div>
 
-                                <div class="employee-card-id">
-                                    {{ $employee->employee_id }}
-                                </div>
-
-                                <div class="employee-card-role">
-                                    @if (optional($employee->employee)->role == 'Manager')
-                                        <span class="badge bg-primary">Manager</span>
-                                    @else
-                                        <span class="badge bg-secondary">Staff</span>
-                                    @endif
-
-                                    @if ($employee->status == 'Active')
-                                        <span class="employee-status-badge status-active">Active</span>
-                                    @else
-                                        <span class="employee-status-badge status-inactive">Inactive</span>
-                                    @endif
-                                </div>
-
-                                <div class="employee-card-info">
-                                    <div class="employee-card-info-row">
-                                        <i class="fa fa-envelope"></i>
-                                        <span>{{ $employee->email }}</span>
+                                        <div class="employee-card-info-row">
+                                            <i class="fa fa-id-card"></i>
+                                            <span>{{ $employee->ic_number }}</span>
+                                        </div>
                                     </div>
 
-                                    <div class="employee-card-info-row">
-                                        <i class="fa fa-phone"></i>
-                                        <span>{{ $employee->phone_number }}</span>
-                                    </div>
-
-                                    <div class="employee-card-info-row">
-                                        <i class="fa fa-id-card"></i>
-                                        <span>{{ $employee->ic_number }}</span>
+                                    <div class="employee-card-actions">
+                                        <a href="{{ route('viewemployeedetails', $employee->id) }}" class="employee-view-btn">
+                                            <i class="fa fa-eye"></i>
+                                            View
+                                        </a>
                                     </div>
                                 </div>
-
-                                <div class="employee-card-actions">
-                                    <a href="{{ route('viewemployeedetails', $employee->id) }}" class="employee-view-btn">
-                                        <i class="fa fa-eye"></i>
-                                        View
-                                    </a>
+                            @empty
+                                <div class="employee-card-empty">
+                                    <i class="fa fa-user-times"></i>
+                                    <div>
+                                        <h5>No Employee Found!</h5>
+                                        <p>Please filter and try again.</p>
+                                    </div>
                                 </div>
-                            </div>
-                        @empty
-                            <div class="employee-card-empty">
-                                <i class="fa fa-user-times"></i>
-                                <div>
-                                    <h5>No Employee Found!</h5>
-                                    <p>Please filter and try again.</p>
-                                </div>
-                            </div>
-                        @endforelse
+                            @endforelse
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endif
         </div>
     </div>
 </div>

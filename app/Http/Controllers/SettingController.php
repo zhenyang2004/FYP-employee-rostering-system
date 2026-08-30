@@ -9,6 +9,10 @@ use Illuminate\Validation\Rule;
 
 class SettingController extends Controller
 {
+
+    private function isManager() {
+        return optional(auth()->user()->employee)->role == 'Manager';
+    }
     public function index() {
 
         $breadcrumbs = [];
@@ -23,10 +27,16 @@ class SettingController extends Controller
             'url' => route('setting')
         ];
 
+        $hasPermission = $this->isManager();
+        if (!$hasPermission) {
+            $users = collect();
+            return view('setting', compact('breadcrumbs', 'users', 'hasPermission'));
+        }
+
         $leaveTypes = LeaveType::orderBy('name', 'asc')->get();
         $rosterSetting = RosterSetting::getSettings();
 
-        return view('setting', compact('breadcrumbs', 'leaveTypes', 'rosterSetting'));
+        return view('setting', compact('breadcrumbs', 'leaveTypes', 'rosterSetting', 'hasPermission'));
     }
 
     public function saveLeaveType(Request $request) {

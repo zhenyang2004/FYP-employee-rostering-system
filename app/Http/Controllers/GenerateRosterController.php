@@ -15,6 +15,10 @@ use Illuminate\Support\Facades\DB;
 
 class GenerateRosterController extends Controller
 {
+
+    private function isManager() {
+        return optional(auth()->user()->employee)->role == 'Manager';
+    }
     public function index() {
 
         $breadcrumbs = [];
@@ -29,7 +33,13 @@ class GenerateRosterController extends Controller
             'url' => route('generateroster')
         ];
 
-        return view('generateroster', compact('breadcrumbs'));
+        $hasPermission = $this->isManager();
+        if (!$hasPermission) {
+            $users = collect();
+            return view('generateroster', compact('breadcrumbs', 'users', 'hasPermission'));
+        }
+
+        return view('generateroster', compact('breadcrumbs', 'hasPermission'));
     }
 
     public function preview(Request $request) {
