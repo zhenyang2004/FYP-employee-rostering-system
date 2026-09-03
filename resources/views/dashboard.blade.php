@@ -30,6 +30,29 @@
                 </nav>
             </div>
 
+            {{-- Welcome Section --}}
+            @php
+                $loginUser = auth()->user();
+                $userName = trim(($loginUser->first_name ?? '') . ' ' . ($loginUser->last_name ?? ''));
+                $userRole = optional($loginUser->employee)->role ?? 'Employee';
+            @endphp
+
+            <div class="dashboard-welcome-card mb-3">
+                <div>
+                    <div class="dashboard-welcome-title">
+                        Welcome back, {{ $userName }}
+                    </div>
+
+                    <div class="dashboard-welcome-subtitle">
+                        Here is your {{ strtolower($userRole) }} dashboard overview.
+                    </div>
+                </div>
+
+                <div class="dashboard-welcome-role">
+                    {{ $userRole }}
+                </div>
+            </div>
+
             {{-- Top Summary Row --}}
             <div class="dashboard-top-summary-row">
                 {{-- Next Shift Summary --}}
